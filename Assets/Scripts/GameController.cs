@@ -6,12 +6,14 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
-
+    [SerializeField] private DictionaryManager Dictionary;
+    [SerializeField] private HistoryManager History;
     private void Awake()
     {
         _waitingOnManagers = 0;
         InitializeManager(Input);
         InitializeManager(Guess);
+        InitializeManager(Dictionary);
     }
 
     private int _waitingOnManagers;

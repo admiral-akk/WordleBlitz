@@ -6,6 +6,7 @@ using UnityEngine;
 public class GuessRenderer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private TextMeshProUGUI guess;
 
     public void AddChar(char c)
     {
