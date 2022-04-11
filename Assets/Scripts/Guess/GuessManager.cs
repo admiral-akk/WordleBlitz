@@ -39,7 +39,10 @@ public class GuessManager : BaseManager
     private void CheckAnswer()
     {
         Debug.LogFormat("Current answer: {0}\nGuess: {1}", CurrentAnswer, Guess);
-        if (Guess == CurrentAnswer)
+        if (!_dictionary.IsValidWord(Guess))
+        {
+            Debug.Log("Guess isn't valid word!");
+        } else if (Guess == CurrentAnswer)
         {
             Debug.Log("Guess correct!");
             GetNewAnswer();
