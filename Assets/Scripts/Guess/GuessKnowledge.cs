@@ -53,7 +53,7 @@ public class GuessKnowledge
                 continue;
             }
 
-            if (answer.Any(c => c == guess[i]))
+            if (answer.Any(g => g == c))
             {
                 Set(c, i, WordKnowledge.LetterKnowledge.WrongPosition);
                 continue;

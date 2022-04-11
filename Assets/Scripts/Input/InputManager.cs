@@ -45,6 +45,14 @@ public class InputManager : BaseManager
     {
         _currentInput = c;
     }
+    private void Delete()
+    {
+
+    }
+    private void Enter()
+    {
+
+    }
     private void OnGUI()
     {
         var e = Event.current;
@@ -52,9 +60,20 @@ public class InputManager : BaseManager
             return;
         if (e.type != EventType.KeyDown)
             return;
-        if (!Language.IsAlpha((char)e.keyCode))
+        if (Language.IsAlpha((char)e.keyCode) )
+        {
+
+            HitKey((char)e.keyCode);
             return;
-        HitKey((char)e.keyCode);
+        }
+        if ( e.keyCode == KeyCode.Delete)
+        {
+            Delete();
+        }
+        if (e.keyCode == KeyCode.KeypadEnter)
+        {
+            Enter();
+        }
     }
 
     public void UpdateKnowledge(WordKnowledge knowledge)
