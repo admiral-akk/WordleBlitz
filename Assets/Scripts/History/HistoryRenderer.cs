@@ -1,19 +1,33 @@
 using System.Collections.Generic;
-using System.Text;
-using TMPro;
 using UnityEngine;
 
 public class HistoryRenderer : MonoBehaviour
-{
-    [SerializeField] private TextMeshProUGUI text;
+{ 
+    [SerializeField] private GameObject WordPrefab;
+    [SerializeField] private Canvas WordList;
 
+    private List<WordRenderer> _words;
+    private List<WordRenderer> Words
+    {
+        get
+        {
+            if (_words == null)
+                _words = new List<WordRenderer>();
+            return _words;
+        }
+    }
     public void RenderGuesses(List<Word> guesses)
     {
-        var sb = new StringBuilder();
+        foreach (var word in Words)
+        {
+            Destroy(word.gameObject);
+        }
+        Words.Clear();
         foreach (var guess in guesses)
         {
-            sb.AppendLine((string)guess);
+            var word = Instantiate(WordPrefab, WordList.transform).GetComponent<WordRenderer>();
+            word.UpdateWord(guess, guess.Length);
+            _words.Add(word);
         }
-        text.text = sb.ToString();
     }
 }

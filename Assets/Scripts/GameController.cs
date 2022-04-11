@@ -52,6 +52,17 @@ public class GameController : MonoBehaviour
             return;
         if (!Input.HasInput)
             return;
-        Guess.AddChar(Input.GetAndClearInput());
+       var guessResult = Guess.AddChar(Input.GetAndClearInput());
+        switch (guessResult.S)
+        {
+            default:
+                return;
+            case GuessResult.State.Wrong:
+                History.GuessSubmitted(guessResult.Guess);
+                return;
+            case GuessResult.State.Correct:
+                History.GuessSubmitted(guessResult.Guess);
+                return;
+        }
     }
 }

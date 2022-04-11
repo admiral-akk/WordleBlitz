@@ -52,12 +52,19 @@ public class GuessManager : BaseManager
         }
         Guess = "";
     }
-    public void AddChar(char c)
+    public GuessResult AddChar(char c)
     {
         Guess += c;
         if (Guess.Length < WordLength)
-            return;
-        CheckAnswer();
+            return new GuessResult("", GuessResult.State.None);
+        var submittedGuess = Guess;
+        Guess = "";
+        if (!_dictionary.IsValidWord(submittedGuess))
+            return new GuessResult("", GuessResult.State.IllegalWord);
+        if (submittedGuess != CurrentAnswer)
+            return new GuessResult(submittedGuess, GuessResult.State.Wrong);
+        GetNewAnswer();
+        return new GuessResult(submittedGuess, GuessResult.State.Correct);
     }
 
     private void GetNewAnswer()
