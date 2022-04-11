@@ -35,5 +35,6 @@ public readonly struct Word
     public static implicit operator Word(string s) => new Word(s);
     public static explicit operator string(Word w) => w._word;
 
+    public char this[int i] => _word[i];
     public int Length => _word.Length;
 }

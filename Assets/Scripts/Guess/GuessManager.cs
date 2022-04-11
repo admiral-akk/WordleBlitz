@@ -15,7 +15,7 @@ public class GuessManager : BaseManager
         set
         {
             _guess = value;
-            Renderer.UpdateGuess(_guess);
+            Renderer.UpdateGuess(_guess, WordLength);
         }
     }
 

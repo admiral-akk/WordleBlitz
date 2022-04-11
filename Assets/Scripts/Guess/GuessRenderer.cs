@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class GuessRenderer : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI guessText;
+    [SerializeField] private WordRenderer word;
 
-    public void UpdateGuess(Word guess)
+    public void UpdateGuess(Word guess, int maxLength)
     {
-        guessText.text = (string)guess;
+        word.UpdateWord(guess, maxLength);
     }
 }
