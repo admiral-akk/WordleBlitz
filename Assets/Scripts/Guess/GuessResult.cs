@@ -8,12 +8,17 @@
         Correct,
     }
 
-    public readonly WordKnowledge Guess;
+    public readonly WordKnowledge Knowledge;
     public readonly State S;
 
     public GuessResult(Word guess, int maxLength, State s)
     {
-        Guess = new WordKnowledge(guess, maxLength);
+        Knowledge = new WordKnowledge(guess, maxLength);
+        S = s;
+    }
+    public GuessResult(WordKnowledge knowledge, State s)
+    {
+        Knowledge = knowledge;
         S = s;
     }
 }

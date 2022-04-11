@@ -1,5 +1,8 @@
 ﻿
-public readonly struct Word
+using System.Collections;
+using System.Collections.Generic;
+
+public readonly struct Word : IEnumerable<char>
 {
     private readonly string _word;
     private Word(string word)
@@ -37,4 +40,16 @@ public readonly struct Word
 
     public char this[int i] => _word[i];
     public int Length => _word.Length;
+
+    public bool Contains(char c) => _word.Contains(c.ToString().ToUpper());
+
+    public IEnumerator GetEnumerator()
+    {
+        return ((IEnumerable)_word).GetEnumerator();
+    }
+
+    IEnumerator<char> IEnumerable<char>.GetEnumerator()
+    {
+        return ((IEnumerable<char>)_word).GetEnumerator();
+    }
 }

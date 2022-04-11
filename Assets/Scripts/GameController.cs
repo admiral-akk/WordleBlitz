@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
             case GuessResult.State.Correct:
                 break;
         }
-        History.GuessSubmitted(guessResult.Guess);
-        Input.UpdateKnowledge(guessResult.Guess);
+        History.GuessSubmitted(guessResult.Knowledge);
+        Input.UpdateKnowledge(guessResult.Knowledge);
     }
 }

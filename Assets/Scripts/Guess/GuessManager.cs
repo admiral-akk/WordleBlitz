@@ -7,6 +7,7 @@ public class GuessManager : BaseManager
     [SerializeField, Range(1,10)] private int WordLength;
 
     private DictionaryManager _dictionary;
+    private GuessKnowledge _knowledge;
 
     private Word _guess;
     private Word Guess
@@ -32,33 +33,39 @@ public class GuessManager : BaseManager
 
     public override IEnumerator Initialize()
     {
+        _knowledge = new GuessKnowledge(WordLength);
         Guess = "";
         yield break;
     }
+
+    private WordKnowledge CurrentGuess => _knowledge.GenerateKnowledge(Guess, WordLength);
+
     public GuessResult AddChar(char c)
     {
         Guess += c;
         if (Guess.Length < WordLength)
-            return new GuessResult("", WordLength, GuessResult.State.None);
-        var submittedGuess = Guess;
+            return new GuessResult(CurrentGuess, GuessResult.State.None);
+        _knowledge.UpdateKnowledge(Guess, CurrentAnswer);
+        var currentGuess = CurrentGuess;
         Guess = "";
-        if (!_dictionary.IsValidWord(submittedGuess))
-            return new GuessResult("", WordLength, GuessResult.State.IllegalWord);
-        if (submittedGuess != CurrentAnswer)
-            return new GuessResult(submittedGuess, WordLength, GuessResult.State.Wrong);
+        if (!_dictionary.IsValidWord(currentGuess.Word))
+            return new GuessResult(currentGuess, GuessResult.State.IllegalWord);
+        if (currentGuess.Word != CurrentAnswer)
+            return new GuessResult(currentGuess, GuessResult.State.Wrong);
         GetNewAnswer();
-        return new GuessResult(submittedGuess, WordLength, GuessResult.State.Correct);
+        return new GuessResult(currentGuess, GuessResult.State.Correct);
     }
 
     private void GetNewAnswer()
     {
-        CurrentAnswer = _dictionary.GetRandomWord(WordLength); 
+        CurrentAnswer = _dictionary.GetRandomWord(WordLength);
+        _knowledge.Clear();
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
     {
         _dictionary = dictionary;
-        GetNewAnswer();
+        CurrentAnswer = "BLITZ";
     }
 
 }
