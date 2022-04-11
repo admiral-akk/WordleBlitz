@@ -35,23 +35,6 @@ public class GuessManager : BaseManager
         Guess = "";
         yield break;
     }
-
-    private void CheckAnswer()
-    {
-        Debug.LogFormat("Current answer: {0}\nGuess: {1}", CurrentAnswer, Guess);
-        if (!_dictionary.IsValidWord(Guess))
-        {
-            Debug.Log("Guess isn't valid word!");
-        } else if (Guess == CurrentAnswer)
-        {
-            Debug.Log("Guess correct!");
-            GetNewAnswer();
-        } else
-        {
-            Debug.Log("Guess wrong!");
-        }
-        Guess = "";
-    }
     public GuessResult AddChar(char c)
     {
         Guess += c;
