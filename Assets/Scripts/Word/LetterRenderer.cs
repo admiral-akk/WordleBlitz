@@ -46,6 +46,7 @@ public class LetterRenderer : MonoBehaviour
     public void Set(char c, WordKnowledge.LetterKnowledge k)
     {
         text.text = c.ToString();
+        gameObject.AddComponent(typeof(Pop));
         switch (k)
         {
             case WordKnowledge.LetterKnowledge.None:
