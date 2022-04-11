@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,10 +24,11 @@ public class InputManager : BaseManager
         key.Callback = () => HitKey(c);
     }
 
-    public override void Initialize()
+    public override IEnumerator Initialize()
     {
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
+        yield break;
     }
 
     public bool HasInput => _currentInput.HasValue;

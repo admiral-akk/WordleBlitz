@@ -1,6 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class BaseManager : MonoBehaviour
 {
-    public abstract void Initialize();
+    public virtual IEnumerator Initialize()
+    {
+        yield break;
+    }
 }

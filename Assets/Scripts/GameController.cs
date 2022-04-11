@@ -9,12 +9,29 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        Input.Initialize();
-        Guess.Initialize();
+        _waitingOnManagers = 0;
+        InitializeManager(Input);
+        InitializeManager(Guess);
+    }
+
+    private int _waitingOnManagers;
+    private bool Initialized => _waitingOnManagers == 0;
+
+    private void InitializeManager(BaseManager manager)
+    {
+        _waitingOnManagers++;
+        StartCoroutine(Handle(manager));
+    }
+    private IEnumerator Handle(BaseManager manager)
+    {
+        yield return manager.Initialize();
+        _waitingOnManagers--;
     }
 
     private void FixedUpdate()
     {
+        if (!Initialized)
+            return;
         if (!Input.HasInput)
             return;
         Guess.AddChar(Input.GetAndClearInput());
