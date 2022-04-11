@@ -1,16 +1,17 @@
-using UnityEngine;
+using System.Collections.Generic;
 
-public class Knowledge : MonoBehaviour
+public class Knowledge 
 {
-    // Start is called before the first frame update
-    void Start()
+    private Word _answer;
+    private List<Word> _guesses;
+
+    public Knowledge(int wordLength)
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateKnowledge(Word guess)
     {
-        
+        _guesses.Add(guess);
     }
 }

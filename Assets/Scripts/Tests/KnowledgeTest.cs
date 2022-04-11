@@ -4,7 +4,7 @@ public class KnowledgeTest
 {
     // A Test behaves as an ordinary method
     [Test]
-    public void NewTestScriptSimplePasses()
+    public void EmptyKnowledge()
     {
         // Use the Assert class to test conditions
     }
