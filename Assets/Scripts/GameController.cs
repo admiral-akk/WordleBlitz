@@ -58,11 +58,10 @@ public class GameController : MonoBehaviour
             default:
                 return;
             case GuessResult.State.Wrong:
-                History.GuessSubmitted(guessResult.Guess);
-                return;
             case GuessResult.State.Correct:
-                History.GuessSubmitted(guessResult.Guess);
-                return;
+                break;
         }
+        History.GuessSubmitted(guessResult.Guess);
+        Input.UpdateKnowledge(guessResult.Guess);
     }
 }

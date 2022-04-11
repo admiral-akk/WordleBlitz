@@ -56,4 +56,9 @@ public class InputManager : BaseManager
             return;
         HitKey((char)e.keyCode);
     }
+
+    public void UpdateKnowledge(WordKnowledge knowledge)
+    {
+        // TODO: implement keyboard color updates
+    }
 }
