@@ -15,7 +15,7 @@ public class GuessManager : BaseManager
         set
         {
             _guess = value;
-            Renderer.UpdateGuess(_guess, WordLength);
+            Renderer.UpdateGuess(new WordKnowledge(_guess, WordLength));
         }
     }
 
@@ -39,15 +39,15 @@ public class GuessManager : BaseManager
     {
         Guess += c;
         if (Guess.Length < WordLength)
-            return new GuessResult("", GuessResult.State.None);
+            return new GuessResult("", WordLength, GuessResult.State.None);
         var submittedGuess = Guess;
         Guess = "";
         if (!_dictionary.IsValidWord(submittedGuess))
-            return new GuessResult("", GuessResult.State.IllegalWord);
+            return new GuessResult("", WordLength, GuessResult.State.IllegalWord);
         if (submittedGuess != CurrentAnswer)
-            return new GuessResult(submittedGuess, GuessResult.State.Wrong);
+            return new GuessResult(submittedGuess, WordLength, GuessResult.State.Wrong);
         GetNewAnswer();
-        return new GuessResult(submittedGuess, GuessResult.State.Correct);
+        return new GuessResult(submittedGuess, WordLength, GuessResult.State.Correct);
     }
 
     private void GetNewAnswer()

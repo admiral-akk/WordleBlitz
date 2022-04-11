@@ -5,17 +5,17 @@ public class HistoryManager : BaseManager
 {
     [SerializeField] private HistoryRenderer Renderer;
 
-    private List<Word> _guesses;
-    private List<Word> Guesses
+    private List<WordKnowledge> _guesses;
+    private List<WordKnowledge> Guesses
     {
         get
         {
             if (_guesses == null)
-                _guesses = new List<Word>();
+                _guesses = new List<WordKnowledge>();
             return _guesses;
         }
     }
-    public void GuessSubmitted(Word guess)
+    public void GuessSubmitted(WordKnowledge guess)
     {
         Guesses.Add(guess);
         Renderer.RenderGuesses(Guesses);

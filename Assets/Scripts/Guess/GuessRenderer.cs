@@ -4,8 +4,8 @@ public class GuessRenderer : MonoBehaviour
 {
     [SerializeField] private WordRenderer word;
 
-    public void UpdateGuess(Word guess, int maxLength)
+    public void UpdateGuess(WordKnowledge guess)
     {
-        word.UpdateWord(guess, maxLength);
+        word.UpdateWord(guess);
     }
 }
