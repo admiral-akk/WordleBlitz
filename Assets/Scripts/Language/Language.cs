@@ -10,5 +10,4 @@ public static class Language
     {
         return Alphabet.Any(a => a.ToString().ToUpper() == c.ToString().ToUpper());
     }
-
 }
