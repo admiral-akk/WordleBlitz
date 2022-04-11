@@ -14,14 +14,15 @@ public class DictionaryManager : BaseManager
 
     public override IEnumerator Initialize()
     {
+        _words = new List<WordDictionary>();
+        _answers = new List<WordDictionary>();
         yield return FillWordCollection(_wordPath, _words);
         yield return FillWordCollection(_answerPath, _answers);
+        Debug.Log("Dictionary loaded");
     }
 
     private static void AddWord(string word, List<WordDictionary> collection)
     {
-        if (collection == null)
-            collection = new List<WordDictionary>();
         while (collection.Count < word.Length)
             collection.Add(new WordDictionary());
         collection[word.Length - 1].AddWord(word);

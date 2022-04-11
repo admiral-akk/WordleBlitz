@@ -4,31 +4,47 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    #region Managers
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
     [SerializeField] private DictionaryManager Dictionary;
     [SerializeField] private HistoryManager History;
-    private void Awake()
-    {
-        _waitingOnManagers = 0;
-        InitializeManager(Input);
-        InitializeManager(Guess);
-        InitializeManager(Dictionary);
-    }
+    #endregion
+
+    #region Initialization
 
     private int _waitingOnManagers;
-    private bool Initialized => _waitingOnManagers == 0;
-
-    private void InitializeManager(BaseManager manager)
+    private void Awake()
+    {
+        StartCoroutine(InitializeManagers());
+    }
+    private IEnumerator InitializeManager(BaseManager manager)
     {
         _waitingOnManagers++;
-        StartCoroutine(Handle(manager));
-    }
-    private IEnumerator Handle(BaseManager manager)
-    {
         yield return manager.Initialize();
         _waitingOnManagers--;
     }
+
+    private IEnumerator InitializeManagers()
+    {
+        // Controller is starting.
+        _waitingOnManagers = 1;
+        yield return InitializeManager(Input);
+        yield return InitializeManager(Guess);
+        yield return InitializeManager(Dictionary);
+        yield return InitializeManager(History);
+        RegisterManagers();
+        // Controller is finished.
+        _waitingOnManagers--;
+    }
+
+    private void RegisterManagers()
+    {
+        Guess.RegisterDictionary(Dictionary);
+    }
+    #endregion
+
+    private bool Initialized => _waitingOnManagers == 0;
 
     private void FixedUpdate()
     {
