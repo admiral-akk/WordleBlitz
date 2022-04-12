@@ -277,7 +277,22 @@ public class GuessKnowledgeTest
         Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
         for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
+            switch(i)
+            {
+                default:
+                    break;
+                case 0:
+                    Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
+                    break;
+                case 1:
+                case 4:
+                    Assert.AreEqual(LetterKnowledge.NotInWord, annotatedGuess.Knowledge[i]);
+                    break;
+                case 2:
+                case 3:
+                    Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i], i.ToString());
+                    break;
+            }
         }
     }
     #endregion

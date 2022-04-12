@@ -26,19 +26,19 @@ public abstract class Knowledge
         for (var i = 0; i < guess.Length; i++)
         {
             var c = guess[i];
+            if (!_answer.Contains(c))
+            {
+                UpdateAll(c, LetterKnowledge.NotInWord);
+                continue;
+            }
+            UpdateAll(c, LetterKnowledge.CouldBeHere);
             if (c == _answer[i])
             {
                 characterKnowledge[i][c] = LetterKnowledge.Here;
                 continue;
-            }
-            if (!_answer.Contains(c))
-            {
-                UpdateAll(c,LetterKnowledge.NotInWord);
-                continue;
-            }
+            } 
 
             characterKnowledge[i][c] = LetterKnowledge.NotHere;
-            UpdateAll(c, LetterKnowledge.CouldBeHere);
         }
     }
 
