@@ -82,7 +82,7 @@ public class InputManager : BaseManager
         foreach (var c in Language.Alphabet)
         {
             var k = knowledge.GlobalKnowledge(c);
-            Keys[c].UpdateKnowledge(k);
+            Keys[c].Knowledge = k;
         }
     }
 }

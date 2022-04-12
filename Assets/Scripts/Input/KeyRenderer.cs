@@ -4,17 +4,33 @@ using UnityEngine;
 using UnityEngine.UI;
 using static CharacterKnowledge;
 
-public class KeyRenderer : MonoBehaviour
+public class KeyRenderer : BaseRenderer
 {
-    [SerializeField] private Image background;
     [SerializeField] private Button button;
-    [SerializeField] private TextMeshProUGUI text;
 
+    private char _key;
     public char Key
     {
-        get => text.text[0];
-        set => text.text = value.ToString().ToUpper();
+        get => _key;
+        set
+        {
+            _key = value.ToString().ToUpper()[0];
+            Render(Key.ToString(), Knowledge);
+        }
+            
     }
+
+    private LetterKnowledge _knowledge;
+    public LetterKnowledge Knowledge
+    {
+        private get => _knowledge;
+        set
+        {
+            _knowledge = value;
+            Render(Key.ToString(), Knowledge);
+        }
+    }
+
 
     public Action Callback
     {
@@ -22,28 +38,6 @@ public class KeyRenderer : MonoBehaviour
         {
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => value());
-        }
-    }
-
-    public void UpdateKnowledge(LetterKnowledge k)
-    {
-        switch (k)
-        {
-            case LetterKnowledge.NoKnowledge:
-                background.color = ColorPaletteManager.ColorPalette.Default;
-                break;
-            case LetterKnowledge.NotInWord:
-                background.color = ColorPaletteManager.ColorPalette.None;
-                break;
-            case LetterKnowledge.NotHere:
-            case LetterKnowledge.CouldBeHere:
-                background.color = ColorPaletteManager.ColorPalette.WrongPosition;
-                break;
-            case LetterKnowledge.Here:
-                background.color = ColorPaletteManager.ColorPalette.Correct;
-                break;
-            default:
-                break;
         }
     }
 }

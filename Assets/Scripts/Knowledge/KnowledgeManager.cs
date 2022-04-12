@@ -30,12 +30,16 @@ public class KnowledgeManager : BaseManager
         }
     }
 
-    private string Answer
+    private Word _answer;
+    private Word Answer
     {
+        get => _answer;
         set
         {
-            GuessKnowledge.SetAnswer(value);
-            KeyboardKnowledge.SetAnswer(value);
+            _answer = value;
+            GuessKnowledge.SetAnswer(_answer);
+            KeyboardKnowledge.SetAnswer(_answer);
+            Debug.LogFormat("New answer: {0}", _answer);
         }
     }
 
@@ -65,5 +69,17 @@ public class KnowledgeManager : BaseManager
     public LetterKnowledge GlobalKnowledge(char c)
     {
         return KeyboardKnowledge[c];
+    }
+
+    public bool Correct(Word guess)
+    {
+        return guess == Answer;
+    }
+
+    public void NewProblem()
+    {
+        Answer = _dictionary.GetRandomWord(WordLength);
+        GuessKnowledge.Clear();
+        KeyboardKnowledge.Clear();
     }
 }

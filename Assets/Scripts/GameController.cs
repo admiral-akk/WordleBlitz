@@ -60,8 +60,13 @@ public class GameController : MonoBehaviour
         if (guess == null)
             return;
         Knowledge.UpdateKnowledge(guess.Value);
+        Dictionary.Guess(guess.Value);
         var annotatedGuess = Knowledge.Annotate(guess.Value);
         History.GuessSubmitted(annotatedGuess);
+        if (Knowledge.Correct(guess.Value))
+        {
+            Knowledge.NewProblem();
+        }
         Input.UpdateKnowledge(Knowledge);
     }
 }

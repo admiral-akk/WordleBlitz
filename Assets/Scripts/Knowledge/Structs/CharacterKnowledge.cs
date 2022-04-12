@@ -36,4 +36,9 @@ public class CharacterKnowledge
             }
         }
     }
+
+    public void Clear()
+    {
+        _knowledge.Clear();
+    }
 }

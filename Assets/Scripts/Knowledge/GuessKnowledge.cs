@@ -15,11 +15,4 @@ public class GuessKnowledge : Knowledge
         }
         return new AnnotatedWord(word, knowledge);
     }
-
-    public LetterKnowledge Get(Word word, int index)
-    {
-        if (index < word.Length)
-            return characterKnowledge[index][word[index]];
-        return LetterKnowledge.NoKnowledge;
-    }
 }

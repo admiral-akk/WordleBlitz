@@ -12,10 +12,13 @@ public class GuessKnowledgeTest
         knowledge.SetAnswer("BLITZ");
 
         var guess = "";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -27,10 +30,13 @@ public class GuessKnowledgeTest
         knowledge.SetAnswer("BLITZ");
 
         var guess = "BLI";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -42,10 +48,13 @@ public class GuessKnowledgeTest
         knowledge.SetAnswer("BLITZ");
 
         var guess = "BLITZ";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -58,10 +67,13 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLOOD");
 
         var guess = "";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -74,12 +86,16 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLOOD");
 
         var guess = "BLI";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
-        {   if (i < 2)
-                Assert.AreEqual(LetterKnowledge.Here, knowledge.Get(guess, i));
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
+        {
+            if (i < 2)
+                Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
             else
-                Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+                Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -92,13 +108,16 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLOOD");
 
         var guess = "BLITZ";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
             if (i < 2)
-                Assert.AreEqual(LetterKnowledge.Here, knowledge.Get(guess, i));
+                Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
             else
-                Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+                Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -111,10 +130,13 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLITZ");
 
         var guess = "";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+             Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -127,13 +149,16 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLITZ");
 
         var guess = "BLI";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
             if (i < 3)
-                Assert.AreEqual(LetterKnowledge.Here, knowledge.Get(guess, i));
+                Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
             else
-                Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge.Get(guess, i));
+                Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -146,10 +171,13 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("BLITZ");
 
         var guess = "BLITZ";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.Here, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
         }
     }
     #endregion
@@ -164,13 +192,17 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("ANODE");
 
         var guess = "DANEO";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NotInWord, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NotInWord, annotatedGuess.Knowledge[i]);
         }
     }
     #endregion
+
     #region Wrong Position
 
     [Test]
@@ -182,10 +214,13 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("ZBLIT");
 
         var guess = "ZBLIT";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NotHere, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NotHere, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -198,10 +233,51 @@ public class GuessKnowledgeTest
         knowledge.UpdateKnowledge("ZBLIT");
 
         var guess = "BLITZ";
+        var annotatedGuess = knowledge.Annotate(guess);
 
-        for (var i = 0; i < wordLength; i++)
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.CouldBeHere, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
+        }
+    }
+
+    [Test]
+    public void WrongAndCorrectPosition()
+    {
+        var wordLength = 5;
+        var knowledge = new GuessKnowledge(wordLength);
+        knowledge.SetAnswer("BLITZ");
+        knowledge.UpdateKnowledge("ZBLIT");
+
+        var guess = "BLITZ";
+        var annotatedGuess = knowledge.Annotate(guess);
+
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
+        {
+            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
+        }
+    }
+
+    [Test]
+    public void CorrectAndWrongPosition()
+    {
+        var wordLength = 5;
+        var knowledge = new GuessKnowledge(wordLength);
+        knowledge.SetAnswer("BLITZ");
+        knowledge.UpdateKnowledge("BLUES");
+
+        var guess = "BULLS";
+        var annotatedGuess = knowledge.Annotate(guess);
+
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
+        {
+            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
         }
     }
     #endregion

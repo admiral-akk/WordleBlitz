@@ -1,13 +1,14 @@
 using UnityEngine;
+using static CharacterKnowledge;
 
 public class ColorPaletteManager : MonoBehaviour
 {
-    [SerializeField] private Color Text;
-    [SerializeField] private Color Correct;
-    [SerializeField] private Color DifferentPosition;
-    [SerializeField] private Color Wrong;
-    [SerializeField] private Color Default;
-    [SerializeField] private Color None;
+    [SerializeField] private Color TextColor;
+    [SerializeField] private Color Here;
+    [SerializeField] private Color CouldBeHere;
+    [SerializeField] private Color NotHere;
+    [SerializeField] private Color NotInWord;
+    [SerializeField] private Color NoKnowledge;
 
     private static ColorPaletteManager Instance;
 
@@ -21,11 +22,26 @@ public class ColorPaletteManager : MonoBehaviour
         Instance = this;
     }
 
-    public static ColorPalette ColorPalette
+    public static Color GetTextColor()
     {
-        get
-        {
-            return new ColorPalette(Instance.Text, Instance.Correct, Instance.DifferentPosition,Instance.Wrong, Instance.Default, Instance.None);
-        }
+        return Instance.TextColor;
+    }
+
+    public static Color GetColor(LetterKnowledge k)
+    {
+            switch (k)
+            {
+                default:
+                case LetterKnowledge.NoKnowledge:
+                    return Instance.NoKnowledge;
+                case LetterKnowledge.NotInWord:
+                    return Instance.NotInWord;
+                case LetterKnowledge.NotHere:
+                    return Instance.NotHere;
+                case LetterKnowledge.CouldBeHere:
+                    return Instance.CouldBeHere;
+                case LetterKnowledge.Here:
+                    return Instance.Here;
+            }
     }
 }
