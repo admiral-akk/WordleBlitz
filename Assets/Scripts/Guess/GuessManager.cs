@@ -31,13 +31,17 @@ public class GuessManager : BaseManager
     }
     public Word? HandleInput(PlayerInput input)
     {
+        Debug.Log(input);
         switch (input.InputType)
         {
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
+                Debug.Log(Guess.Length);
+                Debug.Log(_knowledge.Length);
                 if (Guess.Length < _knowledge.Length)
                     break;
+                Debug.Log(Guess);
                 if (!_dictionary.IsValidWord(Guess))
                     break;
                 var guess = Guess;

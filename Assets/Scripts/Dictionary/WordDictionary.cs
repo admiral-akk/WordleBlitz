@@ -9,7 +9,9 @@ public class WordDictionary
         _words = new HashSet<Word>();
     }
 
-    public void AddWord(string word)
+    public int Count => _words.Count;
+
+    public void AddWord(Word word)
     {
         _words.Add(word);
     } 

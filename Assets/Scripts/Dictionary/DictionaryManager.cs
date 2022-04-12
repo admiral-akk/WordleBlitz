@@ -22,9 +22,10 @@ public class DictionaryManager : BaseManager
         yield return FillWordCollection(_answerPath, _answers);
         Debug.Log("Dictionary loaded");
     }
-
-    private static void AddWord(string word, List<WordDictionary> collection)
+    private static void AddWord(Word word, List<WordDictionary> collection)
     {
+        if (word.Length == 0)
+            return;
         while (collection.Count < word.Length)
             collection.Add(new WordDictionary());
         collection[word.Length - 1].AddWord(word);
@@ -34,6 +35,10 @@ public class DictionaryManager : BaseManager
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+        }
         foreach (var word in www.downloadHandler.text.Split('\n'))
         {
             AddWord(word, collection);
@@ -67,12 +72,14 @@ public class DictionaryManager : BaseManager
     public bool IsValidWord(Word guess)
     {
         var len = guess.Length;
+        Debug.LogFormat("Guess is: {0}, len: {1}", guess, len);
         if (len == 0)
             return false;
         if (len > _words.Count)
             return false;
         if (_usedWords.Contains(guess))
             return false;
+        Debug.Log(_words[len - 1].GetRandomWord());
         return _words[len - 1].IsValidWord(guess);
     }
 

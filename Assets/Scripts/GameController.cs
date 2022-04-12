@@ -60,8 +60,10 @@ public class GameController : MonoBehaviour
         if (!Input.HasInput)
             return;
         var guess = Guess.HandleInput(Input.GetAndClearInput());
-        if (guess == null)
+        Debug.Log(guess);
+        if (!guess.HasValue)
             return;
+        Debug.Log(guess.Value);
         Knowledge.UpdateKnowledge(guess.Value);
         Dictionary.Guess(guess.Value);
         var annotatedGuess = Knowledge.Annotate(guess.Value);

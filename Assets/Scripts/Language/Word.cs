@@ -1,13 +1,15 @@
 ﻿
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public readonly struct Word : IEnumerable<char>
 {
     private readonly string _word;
+    private static readonly Regex _filter = new Regex("[^A-Z]");
     private Word(string word)
     {
-        _word = word.ToUpper();
+        _word = _filter.Replace(word.ToUpper(),  "");
     }
 
     public override int GetHashCode()
