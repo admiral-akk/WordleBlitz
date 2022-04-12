@@ -17,6 +17,20 @@ public class WordLevelKnowledge
         }
     }
 
+    private bool CanOverride(LetterKnowledge current, LetterKnowledge other) {
+        switch (current)
+        {
+            default:
+                return false;
+            case LetterKnowledge.NoKnowledge:
+                return true;
+            case LetterKnowledge.NotHere:
+                return other == LetterKnowledge.CouldBeHere || other == LetterKnowledge.Here;
+            case LetterKnowledge.CouldBeHere:
+                return other == LetterKnowledge.Here;
+        }
+    }
+
     public LetterKnowledge this[char c]
     {
         get => _knowledge.ContainsKey(c) ? _knowledge[c] : LetterKnowledge.NoKnowledge;
@@ -27,19 +41,8 @@ public class WordLevelKnowledge
                 _knowledge[c] = value;
                 return;
             }
-            switch (_knowledge[c])
-            {
-                default:
-                    break;
-                case LetterKnowledge.NotHere:
-                    if (value != LetterKnowledge.Here && value != LetterKnowledge.CouldBeHere)
-                        return;
-                    break;
-                case LetterKnowledge.NotInWord:
-                case LetterKnowledge.Here:
-                    return;
-            }
-            _knowledge[c] = value;
+            if (CanOverride(_knowledge[c], value))
+                _knowledge[c] = value;
         }
     }
 }
