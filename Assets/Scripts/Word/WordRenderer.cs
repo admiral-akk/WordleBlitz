@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static CharacterKnowledge;
 
 public class WordRenderer : MonoBehaviour
 {
