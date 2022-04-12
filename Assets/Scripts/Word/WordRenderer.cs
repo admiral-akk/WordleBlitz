@@ -21,20 +21,20 @@ public class WordRenderer : MonoBehaviour
         _letters.Add(Instantiate(LetterPrefab, transform).GetComponent<LetterRenderer>());
     }
 
-    public void UpdateWord(WordKnowledge knowledge)
+    public void UpdateWord(AnnotatedWord knowledge, int maxLength)
     {
-        while (Letters.Count < knowledge.MaxLength)
+        while (Letters.Count < maxLength)
             AddLetter();
         var word = knowledge.Word;
         for (var i = 0; i < Letters.Count; i++)
         {
             if (i < word.Length)
             {
-                _letters[i].Set(word[i], knowledge[i]);
+                Letters[i].Set(word[i], knowledge.Knowledge[i]);
             }
             else
             {
-                _letters[i].Clear();
+                Letters[i].Clear();
             }
         }
     } 

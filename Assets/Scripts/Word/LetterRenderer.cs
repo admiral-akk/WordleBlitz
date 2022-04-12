@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static CharacterKnowledge;
 
 public class LetterRenderer : MonoBehaviour
 {
@@ -43,26 +44,24 @@ public class LetterRenderer : MonoBehaviour
         }
     }
 
-    public void Set(char c, WordKnowledge.LetterKnowledge k)
+    public void Set(char c, LetterKnowledge k)
     {
         if (text.text == c.ToString())
             return;
         text.text = c.ToString();
         switch (k)
         {
-            case WordKnowledge.LetterKnowledge.None:
+            case LetterKnowledge.NoKnowledge:
                 S = State.None;
                 break;
-            case WordKnowledge.LetterKnowledge.Correct:
+            case LetterKnowledge.Here:
                 S = State.Correct;
                 break;
-            case WordKnowledge.LetterKnowledge.WrongPosition:
-                S = State.None;
+            case LetterKnowledge.NotHere:
+            case LetterKnowledge.CouldBeHere:
+                S = State.WrongPosition;
                 break;
-            case WordKnowledge.LetterKnowledge.Wrong:
-                S = State.Wrong;
-                break;
-            case WordKnowledge.LetterKnowledge.Default:
+            case LetterKnowledge.NotInWord:
                 S = State.Default;
                 return;
         }

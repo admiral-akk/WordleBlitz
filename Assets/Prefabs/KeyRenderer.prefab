@@ -344,5 +344,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d05e334d17d0847990858b9c47c0d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  background: {fileID: 852193745433456731}
   button: {fileID: 852193745433456730}
   text: {fileID: 852193745813014305}

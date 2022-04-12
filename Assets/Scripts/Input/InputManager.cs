@@ -8,20 +8,20 @@ public class InputManager : BaseManager
 
     private KnowledgeManager _knowledge;
 
-    private List<KeyRenderer> _keys;
-    private List<KeyRenderer> Keys
+    private Dictionary<char, KeyRenderer> _keys;
+    private Dictionary<char, KeyRenderer> Keys
     {
         get
         {
             if (_keys == null)
-                _keys = new List<KeyRenderer>();
+                _keys = new Dictionary<char, KeyRenderer>();
             return _keys;
         }
     }
 
     private void InitalizeKeyRenderer(KeyRenderer key, char c)
     {
-        Keys.Add(key);
+        Keys.Add(c,key);
         key.Key = c;
         key.Callback = () => HitKey(c);
     }
@@ -77,8 +77,12 @@ public class InputManager : BaseManager
         }
     }
 
-    public void RegisterKnowledge(KnowledgeManager knowledge)
+    public void UpdateKnowledge(KnowledgeManager knowledge)
     {
-        _knowledge = knowledge;
+        foreach (var c in Language.Alphabet)
+        {
+            var k = knowledge.GlobalKnowledge(c);
+            Keys[c].UpdateKnowledge(k);
+        }
     }
 }

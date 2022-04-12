@@ -16,7 +16,7 @@ public class HistoryRenderer : MonoBehaviour
             return _words;
         }
     }
-    public void RenderGuesses(List<WordKnowledge> guesses)
+    public void RenderGuesses(List<AnnotatedWord> guesses)
     {
         foreach (var word in Words)
         {
@@ -26,7 +26,7 @@ public class HistoryRenderer : MonoBehaviour
         foreach (var guess in guesses)
         {
             var word = Instantiate(WordPrefab, WordList.transform).GetComponent<WordRenderer>();
-            word.UpdateWord(guess);
+            word.UpdateWord(guess, guess.Word.Length);
             _words.Add(word);
         }
     }

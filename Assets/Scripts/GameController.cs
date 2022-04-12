@@ -45,7 +45,6 @@ public class GameController : MonoBehaviour
         Knowledge.RegisterDictionary(Dictionary);
         Guess.RegisterDictionary(Dictionary);
         Guess.RegisterKnowledge(Knowledge);
-        Input.RegisterKnowledge(Knowledge);
     }
     #endregion
 
@@ -60,7 +59,9 @@ public class GameController : MonoBehaviour
         var guess = Guess.HandleInput(Input.GetAndClearInput());
         if (guess == null)
             return;
-        Knowledge.UpdateKnowledge(guess.Value);
-        History.GuessSubmitted(new WordKnowledge(guess.Value, 5));
+        var annotatedGuess = Knowledge.Annotate(guess.Value);
+        Knowledge.UpdateKnowledge(annotatedGuess.Word);
+        History.GuessSubmitted(annotatedGuess);
+        Input.UpdateKnowledge(Knowledge);
     }
 }

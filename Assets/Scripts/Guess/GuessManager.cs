@@ -4,7 +4,6 @@ using UnityEngine;
 public class GuessManager : BaseManager
 {
     [SerializeField] private GuessRenderer Renderer;
-    [SerializeField, Range(1,10)] private int WordLength;
 
     private DictionaryManager _dictionary;
     private KnowledgeManager _knowledge;
@@ -16,7 +15,7 @@ public class GuessManager : BaseManager
         set
         {
             _guess = value;
-            Renderer.UpdateGuess(new WordKnowledge(_guess, WordLength));
+            Renderer.UpdateGuess(_knowledge.Annotate(_guess), _knowledge.Length);
         }
     }
 
@@ -30,13 +29,6 @@ public class GuessManager : BaseManager
             _currentAnswer = value;
         }
     }
-
-    public override IEnumerator Initialize()
-    {
-        Guess = "";
-        yield break;
-    }
-
     public Word? HandleInput(PlayerInput input)
     {
         switch (input.InputType)
@@ -44,7 +36,7 @@ public class GuessManager : BaseManager
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
-                if (Guess.Length < WordLength)
+                if (Guess.Length < _knowledge.Length)
                     break;
                 if (!_dictionary.IsValidWord(Guess))
                     break;
@@ -55,7 +47,7 @@ public class GuessManager : BaseManager
                 Guess = Guess.RemoveEnd();
                 break;
             case PlayerInput.Type.HitKey:
-                if (Guess.Length < WordLength)
+                if (Guess.Length < _knowledge.Length)
                     Guess += input.Letter;
                 break;
         }
@@ -70,6 +62,7 @@ public class GuessManager : BaseManager
     public void RegisterKnowledge(KnowledgeManager knowledge)
     {
         _knowledge = knowledge;
+        Guess = "";
     }
 
 }

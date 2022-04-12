@@ -1,9 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using static CharacterKnowledge;
 
 public class KnowledgeManager : BaseManager
 {
     [SerializeField] private int WordLength;
+
+    public int Length => WordLength;
 
     private DictionaryManager _dictionary;
     
@@ -52,5 +55,15 @@ public class KnowledgeManager : BaseManager
     {
         KeyboardKnowledge.UpdateKnowledge(guess);
         GuessKnowledge.UpdateKnowledge(guess);
+    }
+
+    public AnnotatedWord Annotate(Word guess)
+    {
+        return GuessKnowledge.Annotate(guess);
+    }
+
+    public LetterKnowledge GlobalKnowledge(char c)
+    {
+        return KeyboardKnowledge[c];
     }
 }
