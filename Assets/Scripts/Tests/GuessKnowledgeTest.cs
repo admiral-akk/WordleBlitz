@@ -174,7 +174,7 @@ public class GuessKnowledgeTest
     #region Wrong Position
 
     [Test]
-    public void WrongPositionKnowledgeNotInWord()
+    public void WrongPositionKnowledgeNotHere()
     {
         var wordLength = 5;
         var knowledge = new GuessKnowledge(wordLength);
@@ -185,7 +185,7 @@ public class GuessKnowledgeTest
 
         for (var i = 0; i < wordLength; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NotInWord, knowledge.Get(guess, i));
+            Assert.AreEqual(LetterKnowledge.NotHere, knowledge.Get(guess, i));
         }
     }
 

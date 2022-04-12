@@ -36,10 +36,4 @@ public class CharacterKnowledge
             }
         }
     }
-
-    public void Merge(CharacterKnowledge other)
-    {
-        foreach (var k in other._knowledge.Keys)
-            this[k] = other[k];
-    }
 }
