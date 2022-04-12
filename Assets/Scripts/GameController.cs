@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private DictionaryManager Dictionary;
     [SerializeField] private HistoryManager History;
     [SerializeField] private KnowledgeManager Knowledge;
+    [SerializeField] private TimerManager Timer;
     #endregion
 
     #region Initialization
@@ -35,6 +36,7 @@ public class GameController : MonoBehaviour
         yield return InitializeManager(Dictionary);
         yield return InitializeManager(History);
         yield return InitializeManager(Knowledge);
+        yield return InitializeManager(Timer);
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -54,6 +56,7 @@ public class GameController : MonoBehaviour
     {
         if (!Initialized)
             return;
+        Timer.DecrementTime(Time.fixedDeltaTime);
         if (!Input.HasInput)
             return;
         var guess = Guess.HandleInput(Input.GetAndClearInput());
