@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GuessManager Guess;
     [SerializeField] private DictionaryManager Dictionary;
     [SerializeField] private HistoryManager History;
+    [SerializeField] private KnowledgeManager Knowledge;
     #endregion
 
     #region Initialization
@@ -33,6 +34,7 @@ public class GameController : MonoBehaviour
         yield return InitializeManager(Guess);
         yield return InitializeManager(Dictionary);
         yield return InitializeManager(History);
+        yield return InitializeManager(Knowledge);
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -40,7 +42,10 @@ public class GameController : MonoBehaviour
 
     private void RegisterManagers()
     {
+        Knowledge.RegisterDictionary(Dictionary);
         Guess.RegisterDictionary(Dictionary);
+        Guess.RegisterKnowledge(Knowledge);
+        Input.RegisterKnowledge(Knowledge);
     }
     #endregion
 
@@ -62,6 +67,6 @@ public class GameController : MonoBehaviour
                 break;
         }
         History.GuessSubmitted(guessResult.Knowledge);
-        Input.UpdateKnowledge(guessResult.Knowledge);
+        Knowledge.UpdateKnowledge(guessResult.Knowledge.Word);
     }
 }

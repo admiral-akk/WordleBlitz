@@ -7,7 +7,7 @@ public class GuessManager : BaseManager
     [SerializeField, Range(1,10)] private int WordLength;
 
     private DictionaryManager _dictionary;
-    private GuessKnowledge _knowledge;
+    private KnowledgeManager _knowledge;
 
     private Word _guess;
     private Word Guess
@@ -33,7 +33,6 @@ public class GuessManager : BaseManager
 
     public override IEnumerator Initialize()
     {
-        _knowledge = new GuessKnowledge(WordLength);
         Guess = "";
         yield break;
     }
@@ -63,6 +62,11 @@ public class GuessManager : BaseManager
     {
         _dictionary = dictionary;
         CurrentAnswer = "BLITZ";
+    }
+
+    public void RegisterKnowledge(KnowledgeManager knowledge)
+    {
+        _knowledge = knowledge;
     }
 
 }

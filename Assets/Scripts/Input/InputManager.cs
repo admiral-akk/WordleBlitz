@@ -6,6 +6,8 @@ public class InputManager : BaseManager
 {
     [SerializeField] private KeyboardRenderer Keyboard;
 
+    private KnowledgeManager _knowledge;
+
     private List<KeyRenderer> _keys;
     private List<KeyRenderer> Keys
     {
@@ -76,8 +78,8 @@ public class InputManager : BaseManager
         }
     }
 
-    public void UpdateKnowledge(WordKnowledge knowledge)
+    public void RegisterKnowledge(KnowledgeManager knowledge)
     {
-        // TODO: implement keyboard color updates
+        _knowledge = knowledge;
     }
 }
