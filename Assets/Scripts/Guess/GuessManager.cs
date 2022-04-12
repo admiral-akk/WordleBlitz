@@ -37,31 +37,34 @@ public class GuessManager : BaseManager
         yield break;
     }
 
-    public GuessResult AddChar(char c)
+    public Word? HandleInput(PlayerInput input)
     {
-        Guess += c;
-        var CurrentGuess = new WordKnowledge("",5);
-        if (Guess.Length < WordLength)
-            return new GuessResult(CurrentGuess, GuessResult.State.None);
-        var currentGuess = CurrentGuess;
-        Guess = "";
-        if (!_dictionary.IsValidWord(currentGuess.Word))
-            return new GuessResult(currentGuess, GuessResult.State.IllegalWord);
-        if (currentGuess.Word != CurrentAnswer)
-            return new GuessResult(currentGuess, GuessResult.State.Wrong);
-        GetNewAnswer();
-        return new GuessResult(currentGuess, GuessResult.State.Correct);
-    }
-
-    private void GetNewAnswer()
-    {
-        CurrentAnswer = _dictionary.GetRandomWord(WordLength);
+        switch (input.InputType)
+        {
+            case PlayerInput.Type.None:
+                break;
+            case PlayerInput.Type.Enter:
+                if (Guess.Length < WordLength)
+                    break;
+                if (!_dictionary.IsValidWord(Guess))
+                    break;
+                var guess = Guess;
+                Guess = "";
+                return guess;
+            case PlayerInput.Type.Delete:
+                Guess = Guess.RemoveEnd();
+                break;
+            case PlayerInput.Type.HitKey:
+                if (Guess.Length < WordLength)
+                    Guess += input.Letter;
+                break;
+        }
+        return null;
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
     {
         _dictionary = dictionary;
-        CurrentAnswer = "BLITZ";
     }
 
     public void RegisterKnowledge(KnowledgeManager knowledge)

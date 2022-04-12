@@ -27,18 +27,25 @@ public class KnowledgeManager : BaseManager
         }
     }
 
+    private string Answer
+    {
+        set
+        {
+            GuessKnowledge.SetAnswer(value);
+            KeyboardKnowledge.SetAnswer(value);
+        }
+    }
+
 
     public override IEnumerator Initialize()
     {
+        Answer = "BLITZ";
         yield break;
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
     {
         _dictionary = dictionary;
-        var answer = dictionary.GetRandomWord(WordLength);
-        KeyboardKnowledge.SetAnswer(answer);
-        GuessKnowledge.SetAnswer(answer);
     }
 
     public void UpdateKnowledge(Word guess)

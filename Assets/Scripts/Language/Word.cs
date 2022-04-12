@@ -52,4 +52,11 @@ public readonly struct Word : IEnumerable<char>
     {
         return ((IEnumerable<char>)_word).GetEnumerator();
     }
+
+    public Word RemoveEnd()
+    {
+        if (_word.Length > 0)
+            return _word.Substring(0, _word.Length - 1);
+        return "";
+    }
 }

@@ -33,27 +33,27 @@ public class InputManager : BaseManager
         yield break;
     }
 
-    public bool HasInput => _currentInput.HasValue;
-    public char GetAndClearInput()
+    public bool HasInput => _currentInput.InputType != PlayerInput.Type.None;
+    public PlayerInput GetAndClearInput()
     {
-        var c = _currentInput.Value;
-        _currentInput = null;
+        var c = _currentInput;
+        _currentInput = new PlayerInput();
         return c;
     }
 
-    private char? _currentInput;
+    private PlayerInput _currentInput;
    
     private void HitKey(char c)
     {
-        _currentInput = c;
+        _currentInput = PlayerInput.HitKey(c);
     }
     private void Delete()
     {
-
+        _currentInput = PlayerInput.Delete();
     }
     private void Enter()
     {
-
+        _currentInput = PlayerInput.Enter();
     }
     private void OnGUI()
     {
@@ -62,17 +62,16 @@ public class InputManager : BaseManager
             return;
         if (e.type != EventType.KeyDown)
             return;
-        if (Language.IsAlpha((char)e.keyCode) )
+        if (Language.IsAlpha((char)e.keyCode))
         {
-
             HitKey((char)e.keyCode);
             return;
         }
-        if ( e.keyCode == KeyCode.Delete)
+        if (e.keyCode == KeyCode.Delete || e.keyCode == KeyCode.Backspace)
         {
             Delete();
         }
-        if (e.keyCode == KeyCode.KeypadEnter)
+        if (e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Return)
         {
             Enter();
         }
