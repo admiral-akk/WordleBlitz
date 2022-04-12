@@ -38,14 +38,12 @@ public class GuessManager : BaseManager
         yield break;
     }
 
-    private WordKnowledge CurrentGuess => _knowledge.GenerateKnowledge(Guess, WordLength);
-
     public GuessResult AddChar(char c)
     {
         Guess += c;
+        var CurrentGuess = new WordKnowledge("",5);
         if (Guess.Length < WordLength)
             return new GuessResult(CurrentGuess, GuessResult.State.None);
-        _knowledge.UpdateKnowledge(Guess, CurrentAnswer);
         var currentGuess = CurrentGuess;
         Guess = "";
         if (!_dictionary.IsValidWord(currentGuess.Word))
@@ -59,7 +57,6 @@ public class GuessManager : BaseManager
     private void GetNewAnswer()
     {
         CurrentAnswer = _dictionary.GetRandomWord(WordLength);
-        _knowledge.Clear();
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
