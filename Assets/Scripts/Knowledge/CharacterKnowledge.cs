@@ -29,18 +29,11 @@ public class CharacterKnowledge
             }
             switch (_knowledge[c])
             {
-                default:
-                    break;
-                case LetterKnowledge.NotHere:
-                    // This is to handle the case where we're merging knowledge.
-                    if (value != LetterKnowledge.Here && value != LetterKnowledge.CouldBeHere)
-                        return;
-                    break;
-                case LetterKnowledge.NotInWord:
-                case LetterKnowledge.Here:
+                case LetterKnowledge.NoKnowledge:
+                case LetterKnowledge.CouldBeHere:
+                    _knowledge[c] = value;
                     return;
             }
-            _knowledge[c] = value;
         }
     }
 

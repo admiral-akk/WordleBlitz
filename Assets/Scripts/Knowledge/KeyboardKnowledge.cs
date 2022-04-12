@@ -10,9 +10,7 @@ public class KeyboardKnowledge : Knowledge
     {
         get
         {
-            var knowledge = new CharacterKnowledge();
-            foreach (var k in characterKnowledge)
-                knowledge.Merge(k);
+            var knowledge = new WordLevelKnowledge(characterKnowledge);
             return knowledge[c];
         }
     }
