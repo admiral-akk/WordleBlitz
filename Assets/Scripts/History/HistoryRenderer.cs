@@ -5,6 +5,7 @@ public class HistoryRenderer : MonoBehaviour
 { 
     [SerializeField] private GameObject WordPrefab;
     [SerializeField] private Canvas WordList;
+    [SerializeField, Range(3,12)] private int WordLimit;
 
     private List<WordRenderer> _words;
     private List<WordRenderer> Words
@@ -23,6 +24,8 @@ public class HistoryRenderer : MonoBehaviour
             Destroy(word.gameObject);
         }
         Words.Clear();
+        if (guesses.Count > WordLimit)
+            guesses = guesses.GetRange(guesses.Count - WordLimit, WordLimit);
         foreach (var guess in guesses)
         {
             var word = Instantiate(WordPrefab, WordList.transform).GetComponent<WordRenderer>();
