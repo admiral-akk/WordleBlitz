@@ -40,9 +40,24 @@ public class EndGameManager : BaseManager
 
     public void GameOver(List<Word> successful, Word nextAnswer)
     {
-        Score.text = string.Format("You got {0} words!", successful.Count);
-        var wordList = successful.Select(w => w.ToString()).Aggregate("", (s1, acc) => s1 + ", " + acc);
-        Words.text = wordList.Substring(2, wordList.Length - 2);
+        if (successful.Count < 1)
+            Score.text = string.Format("You didn't get any words!", successful.Count);
+        if (successful.Count == 1)
+            Score.text = string.Format("You got a word!", successful.Count);
+        if (successful.Count > 1)
+            Score.text = string.Format("You got {0} words!", successful.Count);
+        if (successful.Count == 0){ 
+            Words.text = ""; 
+        }
+        if (successful.Count > 0)
+        {
+            var wordList = successful
+                .GetRange(1, successful.Count - 1)
+                .Select(w => w.ToString())
+                .Aggregate("", (s1, acc) => s1 + ", " + acc);
+            Words.text = wordList.Substring(2, wordList.Length - 2);
+        }
+
         NextWord.text = string.Format("Next word: '{0}'", nextAnswer);
         S = State.GameOver;
     }
