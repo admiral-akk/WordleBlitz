@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputManager : BaseManager
 {
     [SerializeField] private KeyboardRenderer Keyboard;
-
-    private KnowledgeManager _knowledge;
+    [SerializeField] private Button NewGameButton;
 
     private Dictionary<char, KeyRenderer> _keys;
     private Dictionary<char, KeyRenderer> Keys
@@ -28,6 +28,7 @@ public class InputManager : BaseManager
 
     public override IEnumerator Initialize()
     {
+        NewGameButton.onClick.AddListener(NewGame);
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
         yield break;
@@ -55,6 +56,12 @@ public class InputManager : BaseManager
     {
         _currentInput = PlayerInput.Enter();
     }
+
+    private void NewGame()
+    {
+        _currentInput = PlayerInput.NewGame();
+    }
+
     private void OnGUI()
     {
         var e = Event.current;
@@ -87,5 +94,9 @@ public class InputManager : BaseManager
             var k = knowledge.GlobalKnowledge(c);
             Keys[c].Knowledge = k;
         }
+    }
+
+    public override void ResetManager()
+    {
     }
 }

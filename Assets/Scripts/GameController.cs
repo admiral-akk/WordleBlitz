@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private HistoryManager History;
     [SerializeField] private KnowledgeManager Knowledge;
     [SerializeField] private TimerManager Timer;
+    [SerializeField] private EndGameManager EndGame;
     #endregion
 
     #region Initialization
@@ -37,6 +38,23 @@ public class GameController : MonoBehaviour
         yield return InitializeManager(History);
         yield return InitializeManager(Knowledge);
         yield return InitializeManager(Timer);
+        yield return InitializeManager(EndGame);
+        RegisterManagers();
+        // Controller is finished.
+        _waitingOnManagers--;
+    }
+
+    private void ResetGame()
+    {
+        // Controller is starting.
+        _waitingOnManagers = 1;
+        Guess.ResetManager();
+        Input.ResetManager();
+        Dictionary.ResetManager();
+        History.ResetManager();
+        Knowledge.ResetManager();
+        Timer.ResetManager();
+        EndGame.ResetManager();
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -47,6 +65,7 @@ public class GameController : MonoBehaviour
         Knowledge.RegisterDictionary(Dictionary);
         Guess.RegisterDictionary(Dictionary);
         Guess.RegisterKnowledge(Knowledge);
+        Input.UpdateKnowledge(Knowledge);
     }
     #endregion
 
@@ -56,10 +75,20 @@ public class GameController : MonoBehaviour
     {
         if (!Initialized)
             return;
-        Timer.DecrementTime(Time.fixedDeltaTime);
-        if (!Input.HasInput)
+        var input = Input.GetAndClearInput();
+        switch (input.InputType)
+        {
+            case PlayerInput.Type.NewGame:
+                ResetGame();
+                return;
+        }
+        if (Timer.TimeLeft < 0f)
+        {
+            EndGame.GameOver(History.GetCorrectGuesses(), Knowledge.SpoilAnswer());
             return;
-        var guess = Guess.HandleInput(Input.GetAndClearInput());
+        }
+        Timer.DecrementTime(Time.fixedDeltaTime);
+        var guess = Guess.HandleInput(input);
         if (!guess.HasValue)
             return;
         Knowledge.UpdateKnowledge(guess.Value);

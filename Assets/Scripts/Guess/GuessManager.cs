@@ -31,7 +31,6 @@ public class GuessManager : BaseManager
     }
     public Word? HandleInput(PlayerInput input)
     {
-        Debug.Log(input);
         switch (input.InputType)
         {
             case PlayerInput.Type.None:
@@ -69,4 +68,8 @@ public class GuessManager : BaseManager
         Guess = "";
     }
 
+    public override void ResetManager()
+    {
+        Guess = "";
+    }
 }

@@ -19,6 +19,7 @@ public abstract class Knowledge
     public void SetAnswer(Word answer)
     {
         _answer = answer;
+        Clear();
     }
 
     public void UpdateKnowledge(Word guess)

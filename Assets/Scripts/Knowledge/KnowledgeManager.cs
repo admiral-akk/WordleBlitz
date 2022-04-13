@@ -79,7 +79,15 @@ public class KnowledgeManager : BaseManager
     public void NewProblem()
     {
         Answer = _dictionary.GetRandomWord(WordLength);
-        GuessKnowledge.Clear();
-        KeyboardKnowledge.Clear();
+    }
+
+    public Word SpoilAnswer()
+    {
+        return Answer;
+    }
+
+    public override void ResetManager()
+    {
+        Answer = "BLITZ";
     }
 }

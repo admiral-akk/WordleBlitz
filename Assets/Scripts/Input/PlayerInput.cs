@@ -8,6 +8,7 @@
         Enter,
         Delete,
         HitKey,
+        NewGame,
     }
 
     public readonly char Letter;
@@ -32,5 +33,9 @@
     public static PlayerInput HitKey(char c)
     {
         return new PlayerInput(Type.HitKey, c);
+    }
+    public static PlayerInput NewGame()
+    {
+        return new PlayerInput(Type.NewGame);
     }
 }

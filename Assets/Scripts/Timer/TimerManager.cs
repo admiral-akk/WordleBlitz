@@ -8,10 +8,10 @@ public class TimerManager : BaseManager
     [SerializeField, Range(10,90)] private float GameDuration;
 
     private float _timeLeft;
-    private float TimeLeft
+    public float TimeLeft
     {
         get => _timeLeft;
-        set
+        private set
         {
             _timeLeft = value;
             Renderer.SetRemainingSeconds(_timeLeft);
@@ -41,12 +41,18 @@ public class TimerManager : BaseManager
     {
         if (S != State.Started)
             return;
-        TimeLeft = TimeLeft - deltaTime;
+        TimeLeft -= deltaTime;
     }
 
     public void GuessSubmitted(Word guess)
     {
         if (guess == "BLITZ")
             S = State.Started;
+    }
+
+    public override void ResetManager()
+    {
+        S = State.Waiting;
+        TimeLeft = GameDuration;
     }
 }

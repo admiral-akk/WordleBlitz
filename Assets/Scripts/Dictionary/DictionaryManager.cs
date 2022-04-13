@@ -94,4 +94,8 @@ public class DictionaryManager : BaseManager
         return newAnswer;
     }
 
+    public override void ResetManager()
+    {
+        _usedWords.Clear();
+    }
 }

@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HistoryManager : BaseManager
@@ -18,6 +20,27 @@ public class HistoryManager : BaseManager
     public void GuessSubmitted(AnnotatedWord guess)
     {
         Guesses.Add(guess);
+        Renderer.RenderGuesses(Guesses);
+    }
+
+    public override IEnumerator Initialize()
+    {
+        Guesses.Clear();
+        Renderer.RenderGuesses(Guesses);
+        yield break;
+    }
+
+    public List<Word> GetCorrectGuesses()
+    {
+        return _guesses
+            .Where(g => g.Knowledge.All(k => k == CharacterKnowledge.LetterKnowledge.Here))
+            .Select(g => g.Word)
+            .ToList();
+    }
+
+    public override void ResetManager()
+    {
+        Guesses.Clear();
         Renderer.RenderGuesses(Guesses);
     }
 }
