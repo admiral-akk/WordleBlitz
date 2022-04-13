@@ -13,7 +13,7 @@ public class TimerRenderer : MonoBehaviour
 
     public void SetRemainingSeconds(float secondsLeft)
     {
-        Timer.text = string.Format("{0:00.00}", Mathf.Max(secondsLeft, 0));
+        Timer.text = string.Format("{0:000.00}", Mathf.Max(secondsLeft, 0));
     }
 
     private void Awake()

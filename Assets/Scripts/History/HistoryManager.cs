@@ -34,7 +34,7 @@ public class HistoryManager : BaseManager
     public List<Word> GetCorrectGuesses()
     {
         return _guesses
-            .Where(g => g.Knowledge.All(k => k == CharacterKnowledge.LetterKnowledge.Here))
+            .Where(g => g.Knowledge.All(k => k == CharacterKnowledge.LetterKnowledge.Here) && g.Word != "BLITZ")
             .Select(g => g.Word)
             .ToList();
     }

@@ -52,7 +52,6 @@ public class EndGameManager : BaseManager
         if (successful.Count > 0)
         {
             var wordList = successful
-                .GetRange(1, successful.Count - 1)
                 .Select(w => w.ToString())
                 .Aggregate("", (s1, acc) => s1 + ", " + acc);
             Words.text = wordList.Substring(2, wordList.Length - 2);
