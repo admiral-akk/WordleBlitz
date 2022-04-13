@@ -25,7 +25,7 @@ public class KeyboardKnowledgeTest
         foreach (var c in Language.Alphabet)
         {
             if (guess.Contains(c.ToString())) {
-                Assert.AreEqual(LetterKnowledge.NotInWord, knowledge[c]);
+                Assert.AreEqual(LetterKnowledge.NoMoreInWord, knowledge[c]);
             } else
             {
                 Assert.AreEqual(LetterKnowledge.NoKnowledge, knowledge[c]);
@@ -105,7 +105,7 @@ public class KeyboardKnowledgeTest
                 case 'W':
                 case 'D':
                 case 'S':
-                    Assert.AreEqual(LetterKnowledge.NotInWord, knowledge[c]);
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, knowledge[c]);
                     break;
             }
         }
@@ -132,7 +132,7 @@ public class KeyboardKnowledgeTest
                     break;
                 case 'O':
                 case 'D':
-                    Assert.AreEqual(LetterKnowledge.NotInWord, knowledge[c]);
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, knowledge[c]);
                     break;
             }
         }
@@ -164,7 +164,7 @@ public class KeyboardKnowledgeTest
                 case 'R':
                 case 'A':
                 case 'S':
-                    Assert.AreEqual(LetterKnowledge.NotInWord, knowledge[c]);
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, knowledge[c]);
                     break;
             }
         }

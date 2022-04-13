@@ -4,7 +4,7 @@ using static CharacterKnowledge;
 
 public abstract class Knowledge 
 {
-    private Word _answer;
+    protected Word _answer;
 
     protected List<CharacterKnowledge> characterKnowledge;
     protected int Length => characterKnowledge.Count;
@@ -29,7 +29,7 @@ public abstract class Knowledge
             var c = guess[i];
             if (!_answer.Contains(c))
             {
-                UpdateAll(c, LetterKnowledge.NotInWord);
+                UpdateAll(c, LetterKnowledge.NoMoreInWord);
                 continue;
             }
             UpdateAll(c, LetterKnowledge.CouldBeHere);

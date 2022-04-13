@@ -5,7 +5,7 @@ public class CharacterKnowledge
     public enum LetterKnowledge
     {
         NoKnowledge,
-        NotInWord,
+        NoMoreInWord,
         NotHere,
         CouldBeHere,
         Here

@@ -32,7 +32,6 @@ public class PromptRenderer : MonoBehaviour
         set
         {
             _s = value;
-            Debug.Log(_s);
             switch (_s)
             {
                 case State.None:

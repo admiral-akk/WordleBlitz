@@ -112,7 +112,7 @@ public class WordLevelKnowledgeTest
             var knowledge = new CharacterKnowledge();
 
             knowledge['A'] = k;
-            knowledge['A'] = LetterKnowledge.NotInWord;
+            knowledge['A'] = LetterKnowledge.NoMoreInWord;
 
             foreach (var c in Language.Alphabet)
             {
@@ -124,7 +124,7 @@ public class WordLevelKnowledgeTest
                     case 'A':
                         if (k == LetterKnowledge.NoKnowledge || k == LetterKnowledge.CouldBeHere)
                         {
-                            Assert.AreEqual(LetterKnowledge.NotInWord, knowledge[c]);
+                            Assert.AreEqual(LetterKnowledge.NoMoreInWord, knowledge[c]);
                         }
                         else
                         {

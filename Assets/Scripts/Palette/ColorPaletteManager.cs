@@ -34,7 +34,7 @@ public class ColorPaletteManager : MonoBehaviour
                 default:
                 case LetterKnowledge.NoKnowledge:
                     return Instance.NoKnowledge;
-                case LetterKnowledge.NotInWord:
+                case LetterKnowledge.NoMoreInWord:
                     return Instance.NotInWord;
                 case LetterKnowledge.NotHere:
                     return Instance.NotHere;

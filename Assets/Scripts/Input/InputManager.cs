@@ -71,18 +71,15 @@ public class InputManager : BaseManager
             return;
         if (Language.IsAlpha((char)e.keyCode))
         {
-            Debug.LogFormat("Letter: {0}", (char)e.keyCode);
             HitKey((char)e.keyCode);
             return;
         }
         if (e.keyCode == KeyCode.Delete || e.keyCode == KeyCode.Backspace)
         {
-            Debug.Log("Delete");
             Delete();
         }
         if (e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Return)
         {
-            Debug.Log("Enter");
             Enter();
         }
     }

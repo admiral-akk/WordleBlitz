@@ -198,7 +198,7 @@ public class GuessKnowledgeTest
         Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
         for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NotInWord, annotatedGuess.Knowledge[i]);
+            Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i]);
         }
     }
     #endregion
@@ -248,17 +248,30 @@ public class GuessKnowledgeTest
     {
         var wordLength = 5;
         var knowledge = new GuessKnowledge(wordLength);
-        knowledge.SetAnswer("BLITZ");
-        knowledge.UpdateKnowledge("ZBLIT");
+        knowledge.SetAnswer("MERRY");
+        knowledge.UpdateKnowledge("MUMMY");
 
-        var guess = "BLITZ";
+        var guess = "MUMMY";
         var annotatedGuess = knowledge.Annotate(guess);
 
         Assert.AreEqual(guess, annotatedGuess.Word);
         Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
         for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
+            switch (i)
+            {
+                default:
+                    break;
+                case 0:
+                case 4:
+                    Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i]);
+                    break;
+            }
         }
     }
 
@@ -286,7 +299,7 @@ public class GuessKnowledgeTest
                     break;
                 case 1:
                 case 4:
-                    Assert.AreEqual(LetterKnowledge.NotInWord, annotatedGuess.Knowledge[i]);
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i]);
                     break;
                 case 2:
                 case 3:
