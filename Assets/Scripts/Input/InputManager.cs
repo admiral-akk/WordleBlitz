@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static CommandKeyRenderer;
 
 public class InputManager : BaseManager
 {
@@ -26,11 +27,28 @@ public class InputManager : BaseManager
         key.Callback = () => HitKey(c);
     }
 
+    private void InitalizeCommandKeyRenderer(CommandKeyRenderer key, Command c)
+    {
+        key.C = c;
+        switch (c)
+        {
+            case Command.None:
+                break;
+            case Command.Delete:
+                key.Callback = () => Delete();
+                break;
+            case Command.Enter:
+                key.Callback = () => Enter();
+                break;
+        }
+    }
     public override IEnumerator Initialize()
     {
         NewGameButton.onClick.AddListener(NewGame);
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
+        InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Delete), Command.Delete);
+        InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Enter), Command.Enter);
         yield break;
     }
 

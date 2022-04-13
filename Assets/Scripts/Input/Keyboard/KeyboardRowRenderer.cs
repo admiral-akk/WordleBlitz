@@ -14,11 +14,16 @@ public class KeyboardRowRenderer : MonoBehaviour
         }
     }
 
-    private static string QwertyOrdering = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    private static string QwertyOrdering = "0QWERTYUIOPASDFGHJKLZXCVBNM1";
     public static int KeyOrder(KeyRenderer key)
     {
         return QwertyOrdering.IndexOf(key.Key);
     }
+    public static int KeyOrder(CommandKeyRenderer key)
+    {
+        return key.C == CommandKeyRenderer.Command.Enter ? 0 : 100;
+    }
+
 
     private void UpdateIndex()
     {
@@ -39,6 +44,11 @@ public class KeyboardRowRenderer : MonoBehaviour
             return;
         }
         Keys.Add(key);
+    }
+
+    public void AddKey(CommandKeyRenderer key)
+    {
+        key.transform.SetSiblingIndex(KeyOrder(key));
     }
 
     public void AddKey(KeyRenderer key)

@@ -25,8 +25,7 @@ public class HistoryManager : BaseManager
 
     public override IEnumerator Initialize()
     {
-        Guesses.Clear();
-        Renderer.Clear();
+        ResetManager();
         yield break;
     }
 

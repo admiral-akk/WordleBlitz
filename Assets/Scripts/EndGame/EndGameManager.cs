@@ -38,8 +38,6 @@ public class EndGameManager : BaseManager
         yield break;
     }
 
-
-
     public void GameOver(List<Word> successful, Word nextAnswer)
     {
         Score.text = string.Format("You got {0} words!", successful.Count);

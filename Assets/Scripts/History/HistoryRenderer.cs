@@ -21,7 +21,7 @@ public class HistoryRenderer : MonoBehaviour
     {
         if (Words.Count > WordLimit - 1)
         {
-            Destroy(_words[0].gameObject);
+            Destroy(Words[0].gameObject);
             Words.RemoveAt(0);
         }
         var word = Instantiate(WordPrefab, WordList.transform).GetComponent<WordRenderer>();
