@@ -81,10 +81,11 @@ public class TutorialManager : MonoBehaviour
         var e = Event.current;
         if (e == null)
             return;
-        if (!e.isMouse)
+        if (e.isMouse && e.button == 0)
+            StartCoroutine(CloseTutorial());
+        if (e.type != EventType.KeyDown)
             return;
-        if (e.button != 0)
-            return;
-        StartCoroutine(CloseTutorial());
+        if (e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Return)
+            StartCoroutine(CloseTutorial());
     }
 }
