@@ -1349,7 +1349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Renderer: {fileID: 438755987}
   GameDuration: 90
-  TimeIncrement: 15
+  TimeIncrement: 10
 --- !u!4 &397580021
 Transform:
   m_ObjectHideFlags: 0
