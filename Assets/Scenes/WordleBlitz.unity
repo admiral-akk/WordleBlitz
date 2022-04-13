@@ -1348,8 +1348,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Renderer: {fileID: 438755987}
-  GameDuration: 10
-  TimeIncrement: 10
+  GameDuration: 90
+  TimeIncrement: 15
 --- !u!4 &397580021
 Transform:
   m_ObjectHideFlags: 0
@@ -1513,7 +1513,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Timer: {fileID: 438755985}
   Increment: {fileID: 1164523366}
-  IncrementFadeout: 2
+  IncrementStart: {fileID: 1303319375}
+  IncrementMove:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: -0.008546678
+      tangentMode: 1
+      weightedMode: 2
+      inWeight: 0
+      outWeight: 0.49558347
+    - serializedVersion: 3
+      time: 0.6325351
+      value: 0.19382875
+      inSlope: 1.1140649
+      outSlope: 1.1140649
+      tangentMode: 1
+      weightedMode: 3
+      inWeight: 0.23737592
+      outWeight: 0.3157051
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 3.852995
+      outSlope: 2
+      tangentMode: 1
+      weightedMode: 1
+      inWeight: 0.39714402
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  IncrementFadeout: 1
 --- !u!1 &467576120
 GameObject:
   m_ObjectHideFlags: 0
@@ -4190,6 +4224,41 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1303319374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1303319375}
+  m_Layer: 5
+  m_Name: IncrementStart
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1303319375
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303319374}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1855149108}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -25, y: -650}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1304979802
 GameObject:
   m_ObjectHideFlags: 0
@@ -5598,6 +5667,7 @@ RectTransform:
   m_Children:
   - {fileID: 438755984}
   - {fileID: 1164523365}
+  - {fileID: 1303319375}
   m_Father: {fileID: 924366486}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

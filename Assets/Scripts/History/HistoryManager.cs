@@ -29,6 +29,8 @@ public class HistoryManager : BaseManager
         yield break;
     }
 
+
+
     public List<Word> GetCorrectGuesses()
     {
         return _guesses
