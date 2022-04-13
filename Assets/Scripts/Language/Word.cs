@@ -41,7 +41,7 @@ public readonly struct Word : IEnumerable<char>
     public static explicit operator string(Word w) => w._word;
 
     public char this[int i] => _word[i];
-    public int Length => _word.Length;
+    public int Length => _word == null ? 0 : _word.Length;
 
     public bool Contains(char c) => _word.Contains(c.ToString().ToUpper());
 
