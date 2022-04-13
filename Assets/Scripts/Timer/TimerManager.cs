@@ -48,6 +48,7 @@ public class TimerManager : BaseManager
     public void IncrementTime()
     {
         TimeLeft += TimeIncrement;
+        Renderer.IncrementTime(TimeIncrement);
     }
 
     public void GuessSubmitted(AnnotatedWord guess)

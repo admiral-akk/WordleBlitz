@@ -12,6 +12,12 @@ public struct FadeoutParameters : IAnimationParameters
         _startTime = startTime;
         ColorObjects = colorObjects;
     }
+    public FadeoutParameters(float duration, float startTime, Graphic colorObject)
+    {
+        Duration = duration;
+        _startTime = startTime;
+        ColorObjects = new Graphic[] { colorObject };
+    }
 }
 
 public class Fadeout : ParameterizedAnimation<FadeoutParameters, Fadeout>
