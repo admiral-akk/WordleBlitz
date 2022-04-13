@@ -29,23 +29,22 @@ public class GuessManager : BaseManager
             _currentAnswer = value;
         }
     }
-    public Word? HandleInput(PlayerInput input)
+    public GuessResult HandleInput(PlayerInput input)
     {
         switch (input.InputType)
         {
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
-                Debug.Log(Guess.Length);
-                Debug.Log(_knowledge.Length);
                 if (Guess.Length < _knowledge.Length)
-                    break;
-                Debug.Log(Guess);
+                    return new GuessResult(Guess, GuessResult.State.TooShort);
                 if (!_dictionary.IsValidWord(Guess))
-                    break;
+                    return new GuessResult(Guess, GuessResult.State.InvalidWord);
+                if (_dictionary.IsUsedWord(Guess))
+                    return new GuessResult(Guess, GuessResult.State.ReusedWord);
                 var guess = Guess;
                 Guess = "";
-                return guess;
+                return new GuessResult(guess, GuessResult.State.Valid);
             case PlayerInput.Type.Delete:
                 Guess = Guess.RemoveEnd();
                 break;
@@ -54,7 +53,7 @@ public class GuessManager : BaseManager
                     Guess += input.Letter;
                 break;
         }
-        return null;
+        return new GuessResult(GuessResult.State.None);
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)

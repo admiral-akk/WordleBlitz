@@ -72,15 +72,16 @@ public class DictionaryManager : BaseManager
     public bool IsValidWord(Word guess)
     {
         var len = guess.Length;
-        Debug.LogFormat("Guess is: {0}, len: {1}", guess, len);
         if (len == 0)
             return false;
         if (len > _words.Count)
             return false;
-        if (_usedWords.Contains(guess))
-            return false;
-        Debug.Log(_words[len - 1].GetRandomWord());
         return _words[len - 1].IsValidWord(guess);
+    }
+
+    public bool IsUsedWord(Word guess)
+    {
+        return _usedWords.Contains(guess);
     }
 
 

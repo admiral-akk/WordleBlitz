@@ -3,22 +3,24 @@
     public enum State
     {
         None,
-        IllegalWord,
-        Wrong,
-        Correct,
+        InvalidWord,
+        TooShort,
+        ReusedWord,
+        Valid,
     }
 
-    public readonly WordKnowledge Knowledge;
+    public readonly Word Guess;
     public readonly State S;
 
-    public GuessResult(Word guess, int maxLength, State s)
+    public GuessResult(Word guess, State s)
     {
-        Knowledge = new WordKnowledge(guess, maxLength);
+        Guess = guess;
         S = s;
     }
-    public GuessResult(WordKnowledge knowledge, State s)
+
+    public GuessResult(State s)
     {
-        Knowledge = knowledge;
         S = s;
+        Guess = "";
     }
 }

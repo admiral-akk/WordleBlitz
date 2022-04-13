@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private KnowledgeManager Knowledge;
     [SerializeField] private TimerManager Timer;
     [SerializeField] private EndGameManager EndGame;
+    [SerializeField] private PromptManager Prompt;
     #endregion
 
     #region Initialization
@@ -38,7 +39,8 @@ public class GameController : MonoBehaviour
         yield return InitializeManager(History);
         yield return InitializeManager(Knowledge);
         yield return InitializeManager(Timer);
-        yield return InitializeManager(EndGame);
+        yield return InitializeManager(EndGame); 
+        yield return InitializeManager(Prompt);
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -55,6 +57,7 @@ public class GameController : MonoBehaviour
         Knowledge.ResetManager();
         Timer.ResetManager();
         EndGame.ResetManager();
+        Prompt.ResetManager();
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -89,15 +92,18 @@ public class GameController : MonoBehaviour
         }
         Timer.DecrementTime(Time.fixedDeltaTime);
         var guess = Guess.HandleInput(input);
-        if (!guess.HasValue)
+        if (guess.S == GuessResult.State.None)
             return;
-        Knowledge.UpdateKnowledge(guess.Value);
-        Dictionary.Guess(guess.Value);
-        var annotatedGuess = Knowledge.Annotate(guess.Value);
+        Prompt.HandleError(guess.S);
+        if (guess.S != GuessResult.State.Valid)
+            return;
+        Knowledge.UpdateKnowledge(guess.Guess);
+        Dictionary.Guess(guess.Guess);
+        var annotatedGuess = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
         Timer.DecrementTime(Time.fixedDeltaTime);
-        if (Knowledge.Correct(guess.Value))
+        if (Knowledge.Correct(guess.Guess))
         {
             Knowledge.NewProblem();
         }
