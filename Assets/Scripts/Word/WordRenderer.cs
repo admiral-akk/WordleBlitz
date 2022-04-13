@@ -40,7 +40,7 @@ public class WordRenderer : MonoBehaviour
             {
                 Letters[i].Set(word[i], knowledge.Knowledge[i]);
                 if (i >= _current.Length)
-                    Letters[i].Pop();
+                    Letters[i].PopLetter();
             }
             else
             {

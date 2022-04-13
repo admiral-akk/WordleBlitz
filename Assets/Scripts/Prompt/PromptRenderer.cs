@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class PromptRenderer : MonoBehaviour
 {
     [SerializeField] private Image background;
+    [SerializeField] private Image border;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField, Range(0.5f, 5)] private float Duration;
-
 
     private enum State
     {
@@ -36,7 +36,7 @@ public class PromptRenderer : MonoBehaviour
             {
                 case State.None:
                 case State.Hidden:
-                    background.gameObject.SetActive(false);
+                    border.gameObject.SetActive(false);
                     return;
                 case State.InvalidWord:
                     text.text = "Word not in dictionary!";
@@ -51,14 +51,21 @@ public class PromptRenderer : MonoBehaviour
                     text.text = "Guess 'BLITZ' to start!";
                     break;
             }
-            StartCoroutine(Fadeout());
+            StartCoroutine(FadeoutCoroutine());
         }
     }
 
-    private IEnumerator Fadeout()
+    private Graphic[] _graphics => new Graphic[]
     {
-        background.gameObject.SetActive(true);
-        background.gameObject.AddComponent(typeof(Pop));
+        text,border,background
+    };
+
+    private IEnumerator FadeoutCoroutine()
+    {
+        border.gameObject.SetActive(true);
+
+        Pop.AddAnimation(border.gameObject, new PopParameters(0.2f, 0.3f));
+        Fadeout.AddAnimation(border.gameObject, new FadeoutParameters(Duration, Duration / 2, _graphics));
         yield return new WaitForSeconds(Duration);
         S = State.Hidden;
     }

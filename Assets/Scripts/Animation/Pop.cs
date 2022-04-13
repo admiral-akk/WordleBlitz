@@ -1,17 +1,28 @@
 using UnityEngine;
 
-public class Pop : BaseAnimation
+public struct PopParameters : IAnimationParameters
 {
-    private float _animationLength = 0.2f;
-    private float _animationMagnitude = 0.3f;
-
-    protected override float SetDuration()
+    public float Duration { get; set; }
+    public float Magnitude { get; set; }
+    public PopParameters(float duration, float magnitude)
     {
-        return _animationLength;
+        Duration = duration;
+        Magnitude = magnitude;
+    }
+}
+
+public class Pop : ParameterizedAnimation<PopParameters, Pop>
+{
+    private float _magnitude;
+
+
+    protected override void Animate(float t)
+    {
+        transform.localScale = Vector3.one * (1 + _magnitude * (1 - Mathf.Abs(2 * t - 1)));
     }
 
-    protected override void ApplyAnimation(float t)
+    protected override void SetParameters(PopParameters parameters)
     {
-        transform.localScale = Vector3.one * (1 + _animationMagnitude*(1- Mathf.Abs(2*t-1)));
+        _magnitude = parameters.Magnitude;
     }
 }

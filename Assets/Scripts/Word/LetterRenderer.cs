@@ -11,8 +11,8 @@ public class LetterRenderer : BaseRenderer
         Render("", LetterKnowledge.NoKnowledge);
     }
 
-    public void Pop()
+    public void PopLetter()
     {
-        gameObject.AddComponent(typeof(Pop));
+        Pop.AddAnimation(gameObject, new PopParameters(0.2f, 0.3f));
     }
 }

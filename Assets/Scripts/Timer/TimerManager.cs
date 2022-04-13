@@ -45,12 +45,17 @@ public class TimerManager : BaseManager
         TimeLeft -= deltaTime;
     }
 
+    public void IncrementTime()
+    {
+        TimeLeft += TimeIncrement;
+    }
+
     public void GuessSubmitted(AnnotatedWord guess)
     {
         if (guess.Word == "BLITZ")
             S = State.Started;
         else if (guess.Correct)
-            TimeLeft += TimeIncrement;
+            IncrementTime();
     }
 
     public override void ResetManager()
