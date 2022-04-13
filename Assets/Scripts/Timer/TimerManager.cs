@@ -6,6 +6,7 @@ public class TimerManager : BaseManager
 {
     [SerializeField] private TimerRenderer Renderer;
     [SerializeField, Range(10,90)] private float GameDuration;
+    [SerializeField, Range(0, 20)] private float TimeIncrement;
 
     private float _timeLeft;
     public float TimeLeft
@@ -44,10 +45,12 @@ public class TimerManager : BaseManager
         TimeLeft -= deltaTime;
     }
 
-    public void GuessSubmitted(Word guess)
+    public void GuessSubmitted(AnnotatedWord guess)
     {
-        if (guess == "BLITZ")
+        if (guess.Word == "BLITZ")
             S = State.Started;
+        else if (guess.Correct)
+            TimeLeft += TimeIncrement;
     }
 
     public override void ResetManager()

@@ -1,3 +1,4 @@
+using System.Linq;
 using static CharacterKnowledge;
 
 public readonly struct AnnotatedWord
@@ -10,4 +11,6 @@ public readonly struct AnnotatedWord
         Word = word;
         Knowledge = knowledge;
     }
+
+    public bool Correct => Knowledge.All(k => k == LetterKnowledge.Here);
 }

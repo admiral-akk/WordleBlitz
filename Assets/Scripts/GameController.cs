@@ -94,7 +94,7 @@ public class GameController : MonoBehaviour
         Knowledge.UpdateKnowledge(guess.Value);
         Dictionary.Guess(guess.Value);
         var annotatedGuess = Knowledge.Annotate(guess.Value);
-        Timer.GuessSubmitted(guess.Value);
+        Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
         Timer.DecrementTime(Time.fixedDeltaTime);
         if (Knowledge.Correct(guess.Value))
