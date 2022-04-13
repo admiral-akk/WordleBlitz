@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private TimerManager Timer;
     [SerializeField] private EndGameManager EndGame;
     [SerializeField] private PromptManager Prompt;
+    [SerializeField] private ScoreboardManager Score;
     #endregion
 
     #region Initialization
@@ -41,6 +42,7 @@ public class GameController : MonoBehaviour
         yield return InitializeManager(Timer);
         yield return InitializeManager(EndGame); 
         yield return InitializeManager(Prompt);
+        yield return InitializeManager(Score);
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -58,6 +60,7 @@ public class GameController : MonoBehaviour
         Timer.ResetManager();
         EndGame.ResetManager();
         Prompt.ResetManager();
+        Score.ResetManager();
         RegisterManagers();
         // Controller is finished.
         _waitingOnManagers--;
@@ -103,6 +106,7 @@ public class GameController : MonoBehaviour
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
         Timer.DecrementTime(Time.fixedDeltaTime);
+        Score.HandleGuess(annotatedGuess);
         if (Knowledge.Correct(guess.Guess))
         {
             Knowledge.NewProblem();
