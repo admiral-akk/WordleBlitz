@@ -20,7 +20,7 @@ public class KeyboardRenderer : MonoBehaviour
     public KeyRenderer AddKey(char c)
     {
         var row = KeyRows[CharToRow(c)];
-        var key = Instantiate(KeyPrefab).GetComponent<KeyRenderer>();
+        var key = Instantiate(KeyPrefab, row.transform).GetComponent<KeyRenderer>();
         key.Key = c;
         row.AddKey(key);
         return key;
