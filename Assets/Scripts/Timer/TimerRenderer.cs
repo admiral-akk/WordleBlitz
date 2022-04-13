@@ -14,11 +14,6 @@ public class TimerRenderer : MonoBehaviour
         Timer.text = string.Format("{0:00.00}", Mathf.Max(secondsLeft, 0));
     }
 
-    private IEnumerator HideIncrement()
-    {
-        yield return new WaitForSeconds(IncrementFadeout);
-    }
-
     private void Awake()
     {
         Increment.enabled = false;
@@ -26,7 +21,9 @@ public class TimerRenderer : MonoBehaviour
 
     public void IncrementTime(float increment)
     {
-        Increment.text = string.Format("+{0:00.00}", Mathf.Max(increment, 0));
+        if (increment == 0f)
+            return;
+        Increment.text = string.Format("+{0:00.00}", increment);
         Pop.AddAnimation(Increment.gameObject, new PopParameters(0.2f, 0.3f));
         Fadeout.AddAnimation(Increment.gameObject, new FadeoutParameters(IncrementFadeout, IncrementFadeout / 2, Increment));
     }

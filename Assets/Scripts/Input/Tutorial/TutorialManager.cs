@@ -16,25 +16,28 @@ public class TutorialManager : MonoBehaviour
 
     private void OpenTutorial()
     {
-        S = State.RecentlyOpen;
         StartCoroutine(SetOpen());
     }
 
     private IEnumerator SetOpen()
     {
+        S = State.RecentlyOpen;
         yield return new WaitForSeconds(RecentlyOpenDelay);
         S = State.Open;
     }
 
-    private void CloseTutorial()
+    private IEnumerator CloseTutorial()
     {
+        S = State.RecentlyClosed;
+        yield return new WaitForSeconds(RecentlyOpenDelay);
         S = State.Closed;
     }
 
     private enum State
     {
         RecentlyOpen,
-        Open, 
+        Open,
+        RecentlyClosed,
         Closed,
     }
 
@@ -56,8 +59,13 @@ public class TutorialManager : MonoBehaviour
                         return;
                     Tutorial.gameObject.SetActive(true);
                     break;
-                case State.Closed:
+                case State.RecentlyClosed:
                     if (_s != State.Open)
+                        return;
+                    Tutorial.gameObject.SetActive(false);
+                    break;
+                case State.Closed:
+                    if (_s != State.RecentlyClosed)
                         return;
                     Tutorial.gameObject.SetActive(false);
                     break;
@@ -77,6 +85,6 @@ public class TutorialManager : MonoBehaviour
             return;
         if (e.button != 0)
             return;
-        CloseTutorial();
+        StartCoroutine(CloseTutorial());
     }
 }
