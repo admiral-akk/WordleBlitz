@@ -39,7 +39,6 @@ public class KnowledgeManager : BaseManager
             _answer = value;
             GuessKnowledge.SetAnswer(_answer);
             KeyboardKnowledge.SetAnswer(_answer);
-            Debug.LogFormat("New answer: {0}", _answer);
         }
     }
 
