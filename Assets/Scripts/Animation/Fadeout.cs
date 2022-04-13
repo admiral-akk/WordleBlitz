@@ -31,6 +31,7 @@ public class Fadeout : ParameterizedAnimation<FadeoutParameters, Fadeout>
         float alpha = t < _start ? 1f : 1 - (t - _start) / (1 - _start);
         foreach (var graphic in _colorObjects)
         {
+            graphic.enabled = alpha > 0f;
             var color = graphic.color;
             color.a = alpha;
             graphic.color = color;

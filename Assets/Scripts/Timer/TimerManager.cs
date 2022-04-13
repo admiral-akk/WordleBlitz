@@ -5,7 +5,7 @@ using UnityEngine;
 public class TimerManager : BaseManager
 {
     [SerializeField] private TimerRenderer Renderer;
-    [SerializeField, Range(10,90)] private float GameDuration;
+    [SerializeField, Range(10, 90)] private float GameDuration;
     [SerializeField, Range(0, 20)] private float TimeIncrement;
 
     private float _timeLeft;
@@ -48,6 +48,7 @@ public class TimerManager : BaseManager
     public void IncrementTime()
     {
         TimeLeft += TimeIncrement;
+        TimeLeft = Mathf.Min(99.99f, TimeLeft);
         Renderer.IncrementTime(TimeIncrement);
     }
 

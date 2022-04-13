@@ -23,6 +23,10 @@ public class PromptRenderer : MonoBehaviour
     private void Awake()
     {
         S = State.Hidden;
+        text.text = "";
+        background.enabled = false;
+        border.enabled = false;
+        text.enabled = false;
     }
 
     private State _s;
@@ -36,7 +40,6 @@ public class PromptRenderer : MonoBehaviour
             {
                 case State.None:
                 case State.Hidden:
-                    border.gameObject.SetActive(false);
                     return;
                 case State.InvalidWord:
                     text.text = "Word not in dictionary!";
@@ -62,8 +65,6 @@ public class PromptRenderer : MonoBehaviour
 
     private IEnumerator FadeoutCoroutine()
     {
-        border.gameObject.SetActive(true);
-
         Pop.AddAnimation(border.gameObject, new PopParameters(0.2f, 0.3f));
         Fadeout.AddAnimation(border.gameObject, new FadeoutParameters(Duration, Duration / 2, _graphics));
         yield return new WaitForSeconds(Duration);

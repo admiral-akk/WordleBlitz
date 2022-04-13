@@ -38,6 +38,9 @@ public abstract class ParameterizedAnimation<T, AnimationType> : MonoBehaviour w
 
     public static void AddAnimation(GameObject target, T parameters)
     {
+        var existingAnimation = target.GetComponent<AnimationType>();
+        if (existingAnimation != null)
+            Destroy(existingAnimation);
         var animation = (AnimationType)target.AddComponent(typeof(AnimationType));
         animation.Initialize(parameters);
     }
