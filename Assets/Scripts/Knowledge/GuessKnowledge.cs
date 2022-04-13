@@ -16,7 +16,7 @@ public class GuessKnowledge : Knowledge
         }
 
         var countHint = new Dictionary<char, int>();
-        for (var i =0; i < word.Length; i++)
+        for (var i = 0; i < word.Length; i++)
         {
             var c = word[i];
             if (knowledge[i] != LetterKnowledge.CouldBeHere && knowledge[i] != LetterKnowledge.Here)
@@ -29,10 +29,16 @@ public class GuessKnowledge : Knowledge
         for (var i = 0; i < word.Length; i++)
         {
             var c = word[i];
-            if (!countHint.ContainsKey(c) || !characterCount.ContainsKey(c) || countHint[c] <= characterCount[c])
+            if (!countHint.ContainsKey(c))
+                continue;
+            if (!characterCount.ContainsKey(c))
+                continue;
+            if (countHint[c] <= characterCount[c])
                 continue;
             for (var j = word.Length - 1; j >= 0; j--)
             {
+                if (word[j] != c)
+                    continue;
                 if (countHint[c] <= characterCount[c])
                     break;
                 if (knowledge[j] != LetterKnowledge.CouldBeHere)
