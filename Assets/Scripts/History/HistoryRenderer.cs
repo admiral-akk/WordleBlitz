@@ -19,14 +19,14 @@ public class HistoryRenderer : MonoBehaviour
     }
     public void RenderGuess(AnnotatedWord guess)
     {
-        if (_words.Count > WordLimit - 1)
+        if (Words.Count > WordLimit - 1)
         {
             Destroy(_words[0].gameObject);
-            _words.RemoveAt(0);
+            Words.RemoveAt(0);
         }
         var word = Instantiate(WordPrefab, WordList.transform).GetComponent<WordRenderer>();
         word.UpdateWord(guess, guess.Word.Length);
-        _words.Add(word);
+        Words.Add(word);
     }
 
     public void Clear()

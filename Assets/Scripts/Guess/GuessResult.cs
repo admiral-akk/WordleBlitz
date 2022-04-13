@@ -7,6 +7,7 @@
         TooShort,
         ReusedWord,
         Valid,
+        NonBlitz,
     }
 
     public readonly Word Guess;

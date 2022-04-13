@@ -16,7 +16,8 @@ public class PromptRenderer : MonoBehaviour
         Hidden,
         InvalidWord,
         TooShort,
-        ReusedWord
+        ReusedWord,
+        NonBlitz,
     }
 
     private void Awake()
@@ -47,6 +48,9 @@ public class PromptRenderer : MonoBehaviour
                 case State.ReusedWord:
                     text.text = "Word used previously!";
                     break;
+                case State.NonBlitz:
+                    text.text = "Guess 'BLITZ' to start!";
+                    break;
             }
             StartCoroutine(Fadeout());
         }
@@ -72,6 +76,9 @@ public class PromptRenderer : MonoBehaviour
                 break;
             case GuessResult.State.ReusedWord:
                 S = State.ReusedWord;
+                break;
+            case GuessResult.State.NonBlitz:
+                S = State.NonBlitz;
                 break;
         }
     }
