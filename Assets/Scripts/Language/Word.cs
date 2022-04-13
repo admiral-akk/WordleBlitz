@@ -1,6 +1,7 @@
 ﻿
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 public readonly struct Word : IEnumerable<char>
@@ -60,5 +61,10 @@ public readonly struct Word : IEnumerable<char>
         if (_word.Length > 0)
             return _word.Substring(0, _word.Length - 1);
         return "";
+    }
+
+    public int CountChar(char c)
+    {
+        return _word.Where(c1 => c == c1).Count();
     }
 }

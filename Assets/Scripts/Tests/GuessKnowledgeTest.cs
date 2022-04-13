@@ -220,7 +220,7 @@ public class GuessKnowledgeTest
         Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
         for (var i = 0; i < guess.Length; i++)
         {
-            Assert.AreEqual(LetterKnowledge.NotHere, annotatedGuess.Knowledge[i]);
+            Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i]);
         }
     }
 
@@ -295,15 +295,49 @@ public class GuessKnowledgeTest
                 default:
                     break;
                 case 0:
-                    Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i]);
-                    break;
-                case 1:
-                case 4:
-                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i]);
+                    Assert.AreEqual(LetterKnowledge.Here, annotatedGuess.Knowledge[i], i.ToString());
                     break;
                 case 2:
                 case 3:
                     Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i], i.ToString());
+                    break;
+                case 1:
+                case 4:
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i], i.ToString());
+                    break;
+            }
+        }
+    }
+
+    [Test]
+    public void DoubleLetter()
+    {
+        var wordLength = 5;
+        var knowledge = new GuessKnowledge(wordLength);
+        knowledge.SetAnswer("ABLES");
+        knowledge.UpdateKnowledge("LLAMA");
+
+        var guess = "LABEL";
+        var annotatedGuess = knowledge.Annotate(guess);
+
+        Assert.AreEqual(guess, annotatedGuess.Word);
+        Assert.AreEqual(guess.Length, annotatedGuess.Knowledge.Length);
+        for (var i = 0; i < guess.Length; i++)
+        {
+            switch (i)
+            {
+                default:
+                    break;
+                case 2:
+                case 3:
+                    Assert.AreEqual(LetterKnowledge.NoKnowledge, annotatedGuess.Knowledge[i], i.ToString());
+                    break;
+                case 0:
+                case 1:
+                    Assert.AreEqual(LetterKnowledge.CouldBeHere, annotatedGuess.Knowledge[i], i.ToString());
+                    break;
+                case 4:
+                    Assert.AreEqual(LetterKnowledge.NoMoreInWord, annotatedGuess.Knowledge[i], i.ToString());
                     break;
             }
         }

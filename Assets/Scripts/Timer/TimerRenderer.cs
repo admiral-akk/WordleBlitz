@@ -13,7 +13,7 @@ public class TimerRenderer : MonoBehaviour
 
     public void SetRemainingSeconds(float secondsLeft)
     {
-        Timer.text = string.Format("{0:000.00}", Mathf.Max(secondsLeft, 0));
+        Timer.text = string.Format("{0:000.}", Mathf.Max(secondsLeft, 0));
     }
 
     private void Awake()
@@ -25,7 +25,7 @@ public class TimerRenderer : MonoBehaviour
     {
         if (increment == 0f)
             return;
-        Increment.text = string.Format("+{0:00.00}", increment);
+        Increment.text = string.Format("+{0:00.}", increment);
         Pop.AddAnimation(Increment.gameObject, new PopParameters(0.2f, 0.3f));
         Fadeout.AddAnimation(Increment.gameObject, new FadeoutParameters(IncrementFadeout, IncrementFadeout / 2, Increment));
         Move.AddAnimation(Increment.gameObject, new MoveParameters(IncrementFadeout, IncrementStart.position, Timer.transform.position, IncrementMove));

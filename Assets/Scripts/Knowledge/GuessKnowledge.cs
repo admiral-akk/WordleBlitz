@@ -14,20 +14,32 @@ public class GuessKnowledge : Knowledge
         {
             knowledge[i] = characterKnowledge[i][word[i]];
         }
-        var dict = new Dictionary<char, int>();
-        for (var i = 0; i < word.Length; i++)
+
+        var countHint = new Dictionary<char, int>();
+        for (var i =0; i < word.Length; i++)
         {
-            var c = _answer[i];
-            if (!dict.ContainsKey(c))
-                dict[c] = 0;
-            if (knowledge[i] != LetterKnowledge.Here)
-                dict[c]++;
+            var c = word[i];
+            if (knowledge[i] != LetterKnowledge.CouldBeHere && knowledge[i] != LetterKnowledge.Here)
+                continue;
+            if (!countHint.ContainsKey(c))
+                countHint[c] = 0;
+            countHint[c]++;
         }
+
         for (var i = 0; i < word.Length; i++)
         {
             var c = word[i];
-            if (dict.ContainsKey(c) && knowledge[i] != LetterKnowledge.Here && dict[c] == 0)
-                knowledge[i] = LetterKnowledge.NoMoreInWord;
+            if (!countHint.ContainsKey(c) || !characterCount.ContainsKey(c) || countHint[c] <= characterCount[c])
+                continue;
+            for (var j = word.Length - 1; j >= 0; j--)
+            {
+                if (countHint[c] <= characterCount[c])
+                    break;
+                if (knowledge[j] != LetterKnowledge.CouldBeHere)
+                    continue;
+                knowledge[j] = LetterKnowledge.NoMoreInWord;
+                countHint[c]--;
+            }
         }
         return new AnnotatedWord(word, knowledge);
     }

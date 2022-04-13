@@ -4,9 +4,10 @@ using static CharacterKnowledge;
 
 public abstract class Knowledge 
 {
-    protected Word _answer;
+    private Word _answer;
 
     protected List<CharacterKnowledge> characterKnowledge;
+    protected Dictionary<char, int> characterCount;
     protected int Length => characterKnowledge.Count;
 
     public Knowledge(int wordLength)
@@ -27,6 +28,8 @@ public abstract class Knowledge
         for (var i = 0; i < guess.Length; i++)
         {
             var c = guess[i];
+            if (_answer.CountChar(c) < guess.CountChar(c))
+                characterCount[c] = _answer.CountChar(c);
             if (!_answer.Contains(c))
             {
                 UpdateAll(c, LetterKnowledge.NoMoreInWord);
@@ -37,9 +40,7 @@ public abstract class Knowledge
             {
                 characterKnowledge[i][c] = LetterKnowledge.Here;
                 continue;
-            } 
-
-            characterKnowledge[i][c] = LetterKnowledge.NotHere;
+            }
         }
     }
 
@@ -53,5 +54,6 @@ public abstract class Knowledge
     {
         foreach (var knowledge in characterKnowledge)
             knowledge.Clear();
+        characterCount = new Dictionary<char, int>();
     }
 }
