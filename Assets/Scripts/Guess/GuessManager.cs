@@ -38,12 +38,12 @@ public class GuessManager : BaseManager
             case PlayerInput.Type.Enter:
                 if (Guess.Length < _knowledge.Length)
                     return new GuessResult(Guess, GuessResult.State.TooShort);
+                if (!_dictionary.IsUsedWord("BLITZ") && Guess != "BLITZ")
+                    return new GuessResult(Guess, GuessResult.State.NonBlitz);
                 if (!_dictionary.IsValidWord(Guess))
                     return new GuessResult(Guess, GuessResult.State.InvalidWord);
                 if (_dictionary.IsUsedWord(Guess))
                     return new GuessResult(Guess, GuessResult.State.ReusedWord);
-                if (!_dictionary.IsUsedWord("BLITZ") && Guess != "BLITZ")
-                    return new GuessResult(Guess, GuessResult.State.NonBlitz);
                 var guess = Guess;
                 Guess = "";
                 return new GuessResult(guess, GuessResult.State.Valid);
