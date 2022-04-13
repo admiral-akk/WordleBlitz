@@ -20,13 +20,13 @@ public class HistoryManager : BaseManager
     public void GuessSubmitted(AnnotatedWord guess)
     {
         Guesses.Add(guess);
-        Renderer.RenderGuesses(Guesses);
+        Renderer.RenderGuess(guess);
     }
 
     public override IEnumerator Initialize()
     {
         Guesses.Clear();
-        Renderer.RenderGuesses(Guesses);
+        Renderer.Clear();
         yield break;
     }
 
@@ -41,6 +41,6 @@ public class HistoryManager : BaseManager
     public override void ResetManager()
     {
         Guesses.Clear();
-        Renderer.RenderGuesses(Guesses);
+        Renderer.Clear();
     }
 }
