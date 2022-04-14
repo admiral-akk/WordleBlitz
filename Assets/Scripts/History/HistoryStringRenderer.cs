@@ -45,16 +45,4 @@ public class HistoryStringRenderer : MonoBehaviour
     {
         _renderedGuesses = "";
     }
-
-    private void OnGUI()
-    {
-
-        var e = Event.current;
-        if (e == null)
-            return;
-        if (e.type != EventType.KeyDown)
-            return;
-        if (e.keyCode == KeyCode.LeftControl)
-            CopyGuessesToClipboard();
-    }
 }

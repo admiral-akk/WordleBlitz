@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,19 @@ public class EndGameManager : BaseManager
     {
         S = State.InProgress;
         yield break;
+    }
+
+    public void GameOver(float timeTaken, List<Tuple<Word, int>> guessesRequired)
+    {
+        var time = TimeSpan.FromSeconds(timeTaken);
+        Score.text = string.Format("Time: {0}:{1}", time.Minutes, time.Seconds);
+        Words.text = "";
+        foreach (var (word, count) in guessesRequired)
+        {
+            Words.text += string.Format("{0}: {1}\n", word, count);
+        }
+        NextWord.text = "";
+        S = State.GameOver;
     }
 
     public void GameOver(List<Word> successful, Word nextAnswer)

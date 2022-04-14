@@ -5,13 +5,11 @@ public readonly struct AnnotatedWord
 {
     public readonly Word Word;
     public readonly LetterKnowledge[] Knowledge;
-    public readonly int AnswerIndex;
 
-    public AnnotatedWord(Word word, LetterKnowledge[] knowledge, int answerIndex = -1)
+    public AnnotatedWord(Word word, LetterKnowledge[] knowledge)
     {
         Word = word;
         Knowledge = knowledge;
-        AnswerIndex = answerIndex;
     }
 
     public bool Correct => Knowledge.All(k => k == LetterKnowledge.Here);

@@ -91,7 +91,7 @@ public class GameController : MonoBehaviour
         }
         if (Knowledge.IsGameOver)
         {
-            EndGame.GameOver(History.GetCorrectGuesses(), "NONE");
+            EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired);
             return;
         }
         Timer.UpdateTime(Time.fixedDeltaTime);

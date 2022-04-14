@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static CharacterKnowledge;
 
@@ -12,7 +13,7 @@ public class KnowledgeManager : BaseManager
     public int Length => WordLength;
 
     private DictionaryManager _dictionary;
-    
+
     private KeyboardKnowledge _keyboardKnowledge;
     public KeyboardKnowledge KeyboardKnowledge
     {
@@ -51,11 +52,13 @@ public class KnowledgeManager : BaseManager
     }
 
     private Dictionary<Word, int> _indices;
+    private Dictionary<Word, int> _guesses;
 
     private void GenerateDailyAnswers()
     {
         DailyAnswers.Clear();
         _indices = new Dictionary<Word, int>();
+        _guesses = new Dictionary<Word, int>();
         UnityEngine.Random.InitState(DateTime.Today.GetHashCode());
         DailyAnswers.Add("BLITZ");
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
@@ -65,6 +68,7 @@ public class KnowledgeManager : BaseManager
             var word = _dictionary.GetRandomWord(WordLength);
             DailyAnswers.Add(word);
             _indices[word] = i;
+            _guesses[word] = 0;
             Debug.LogFormat("{0}: {1}", i, DailyAnswers[i + 1]);
         }
     }
@@ -81,6 +85,8 @@ public class KnowledgeManager : BaseManager
 
     public void UpdateKnowledge(Word guess)
     {
+        if (_guesses.ContainsKey(Answer.Value))
+            _guesses[Answer.Value]++;
         KeyboardKnowledge.UpdateKnowledge(guess);
         GuessKnowledge.UpdateKnowledge(guess);
     }
@@ -122,6 +128,21 @@ public class KnowledgeManager : BaseManager
     public override void ResetManager()
     {
         GenerateDailyAnswers();
+    }
+
+    public List<Tuple<Word, int>> GuessesRequired
+    {
+        get
+        {
+            var l = new List<Tuple<Word, int>>();
+            for (var i = 0; i < _indices.Count; i++)
+            {
+                var word = _indices.Keys.Where(k => _indices[k] == i).First();
+
+                l.Add(new Tuple<Word, int>(word, _guesses[word]));
+            }
+            return l;
+        }
     }
 
 
