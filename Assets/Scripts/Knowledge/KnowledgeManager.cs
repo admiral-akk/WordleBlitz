@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static CharacterKnowledge;
 
 public class KnowledgeManager : BaseManager
 {
     [SerializeField] private int WordLength;
+    [SerializeField] private int DailyAnswerCount;
 
     public int Length => WordLength;
 
@@ -30,28 +33,50 @@ public class KnowledgeManager : BaseManager
         }
     }
 
-    private Word _answer;
-    private Word Answer
+    private Word? Answer
     {
-        get => _answer;
-        set
+        get => DailyAnswers.Count > 0 ? DailyAnswers[0] : null;
+    }
+
+    private List<Word> _dailyAnswers;
+
+    private List<Word> DailyAnswers
+    {
+        get
         {
-            _answer = value;
-            GuessKnowledge.SetAnswer(_answer);
-            KeyboardKnowledge.SetAnswer(_answer);
+            if (_dailyAnswers == null)
+                _dailyAnswers = new List<Word>();
+            return _dailyAnswers;
         }
     }
 
+    private Dictionary<Word, int> _indices;
 
+    private void GenerateDailyAnswers()
+    {
+        DailyAnswers.Clear();
+        _indices = new Dictionary<Word, int>();
+        UnityEngine.Random.InitState(DateTime.Today.GetHashCode());
+        DailyAnswers.Add("BLITZ");
+        GuessKnowledge.SetAnswer(DailyAnswers[0]);
+        KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
+        for (var i = 0; i < DailyAnswerCount; i++)
+        {
+            var word = _dictionary.GetRandomWord(WordLength);
+            DailyAnswers.Add(word);
+            _indices[word] = i;
+            Debug.LogFormat("{0}: {1}", i, DailyAnswers[i + 1]);
+        }
+    }
     public override IEnumerator Initialize()
     {
-        Answer = "BLITZ";
         yield break;
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
     {
         _dictionary = dictionary;
+        GenerateDailyAnswers();
     }
 
     public void UpdateKnowledge(Word guess)
@@ -60,9 +85,10 @@ public class KnowledgeManager : BaseManager
         GuessKnowledge.UpdateKnowledge(guess);
     }
 
-    public AnnotatedWord Annotate(Word guess)
+    public (int, AnnotatedWord) Annotate(Word guess)
     {
-        return GuessKnowledge.Annotate(guess);
+        var annotated = GuessKnowledge.Annotate(guess);
+        return (_indices.ContainsKey(guess) ? _indices[guess] : -1, annotated);
     }
 
     public LetterKnowledge GlobalKnowledge(char c)
@@ -72,21 +98,33 @@ public class KnowledgeManager : BaseManager
 
     public bool Correct(Word guess)
     {
-        return guess == Answer;
+        if (guess == Answer)
+            return true;
+        if (DailyAnswers.Contains(guess))
+            DailyAnswers.RemoveAt(DailyAnswers.IndexOf(guess));
+        return false;
     }
 
     public void NewProblem()
     {
-        Answer = _dictionary.GetRandomWord(WordLength);
+        DailyAnswers.RemoveAt(0);
+        if (IsGameOver)
+            return;
+        GuessKnowledge.SetAnswer(DailyAnswers[0]);
+        KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
     }
 
     public Word SpoilAnswer()
     {
-        return Answer;
+        return Answer.Value;
     }
 
     public override void ResetManager()
     {
-        Answer = "BLITZ";
+        GenerateDailyAnswers();
     }
+
+
+    public int AnswerCount => DailyAnswerCount;
+    public bool IsGameOver => DailyAnswers.Count == 0;
 }

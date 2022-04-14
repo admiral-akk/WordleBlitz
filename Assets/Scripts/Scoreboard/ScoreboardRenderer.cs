@@ -9,10 +9,9 @@ public class ScoreboardRenderer : MonoBehaviour
     public void Render(List<Word> correct)
     {
         text.text = "";
-        foreach (var word in correct)
+        for (var i = 0; i < correct.Count; i++)
         {
-            text.text += (string)word;
-            text.text += "\n";
+            text.text += string.Format("{0}. {1}\n", i+1,(string)correct[i]);
         }
     }
 }
