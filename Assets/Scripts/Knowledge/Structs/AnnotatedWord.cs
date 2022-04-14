@@ -13,4 +13,5 @@ public readonly struct AnnotatedWord
     }
 
     public bool Correct => Knowledge.All(k => k == LetterKnowledge.Here);
+    public bool NoMatching => Knowledge.All(k => k != LetterKnowledge.Here && k != LetterKnowledge.CouldBeHere);
 }
