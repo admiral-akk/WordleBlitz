@@ -6970,6 +6970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WordLength: 5
+  DailyAnswerCount: 10
 --- !u!4 &1966510244
 Transform:
   m_ObjectHideFlags: 0

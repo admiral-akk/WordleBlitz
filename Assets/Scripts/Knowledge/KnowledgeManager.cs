@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static CharacterKnowledge;
 
 public class KnowledgeManager : BaseManager
 {
     [SerializeField] private int WordLength;
+    [SerializeField] private int DailyAnswerCount;
 
     public int Length => WordLength;
 
@@ -30,28 +33,45 @@ public class KnowledgeManager : BaseManager
         }
     }
 
-    private Word _answer;
-    private Word Answer
+    private Word? Answer
     {
-        get => _answer;
-        set
+        get => DailyAnswers.Count > 0 ? DailyAnswers[0] : null;
+    }
+
+    private List<Word> _dailyAnswers;
+
+    private List<Word> DailyAnswers
+    {
+        get
         {
-            _answer = value;
-            GuessKnowledge.SetAnswer(_answer);
-            KeyboardKnowledge.SetAnswer(_answer);
+            if (_dailyAnswers == null)
+                _dailyAnswers = new List<Word>();
+            return _dailyAnswers;
         }
     }
 
-
+    private void GenerateDailyAnswers()
+    {
+        DailyAnswers.Clear();
+        UnityEngine.Random.InitState(DateTime.Today.GetHashCode());
+        DailyAnswers.Add("BLITZ");
+        GuessKnowledge.SetAnswer(DailyAnswers[0]);
+        KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
+        for (var i = 0; i < DailyAnswerCount; i++)
+        {
+            DailyAnswers.Add(_dictionary.GetRandomWord(WordLength));
+            Debug.LogFormat("{0}: {1}", i, DailyAnswers[i + 1]);
+        }
+    }
     public override IEnumerator Initialize()
     {
-        Answer = "BLITZ";
         yield break;
     }
 
     public void RegisterDictionary(DictionaryManager dictionary)
     {
         _dictionary = dictionary;
+        GenerateDailyAnswers();
     }
 
     public void UpdateKnowledge(Word guess)
@@ -72,21 +92,30 @@ public class KnowledgeManager : BaseManager
 
     public bool Correct(Word guess)
     {
-        return guess == Answer;
+        if (guess == Answer)
+            return true;
+        if (DailyAnswers.Contains(guess))
+            DailyAnswers.RemoveAt(DailyAnswers.IndexOf(guess));
+        return false;
     }
 
     public void NewProblem()
     {
-        Answer = _dictionary.GetRandomWord(WordLength);
+        DailyAnswers.RemoveAt(0);
+        GuessKnowledge.SetAnswer(DailyAnswers[0]);
+        KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
     }
 
     public Word SpoilAnswer()
     {
-        return Answer;
+        return Answer.Value;
     }
 
     public override void ResetManager()
     {
-        Answer = "BLITZ";
+        GenerateDailyAnswers();
     }
+
+
+    public bool IsGameOver => DailyAnswers.Count == 0;
 }
