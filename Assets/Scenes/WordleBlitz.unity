@@ -1449,7 +1449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Renderer: {fileID: 438755987}
-  GameDuration: 23
+  GameDuration: 180
   TimeIncrement: 10
 --- !u!4 &397580021
 Transform:
