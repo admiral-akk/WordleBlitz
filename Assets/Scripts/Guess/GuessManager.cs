@@ -15,7 +15,7 @@ public class GuessManager : BaseManager
         set
         {
             _guess = value;
-            Renderer.UpdateGuess(_knowledge.Annotate(_guess), _knowledge.Length);
+            Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
         }
     }
 

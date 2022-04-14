@@ -7,26 +7,34 @@ public class ScoreboardManager : BaseManager
     [SerializeField] private ScoreboardRenderer Renderer;
 
     private List<Word> _correct;
-    private List<Word> Correct
+    private int AnswersCount
     {
-        get {
-            if (_correct == null)
-                _correct = new List<Word>();
-            return _correct;
+        set {
+            _correct = new List<Word>();
+            while (value-- > 0)
+                _correct.Add("");
+            Renderer.Render(_correct);
         }
+
     }
 
-    public void HandleGuess(AnnotatedWord word)
+    public void HandleCorrectGuess(AnnotatedWord correctWord, int index)
     {
-        if (word.Correct && word.Word != "BLITZ")
-        {
-            Correct.Add(word.Word);
-            Renderer.Render(Correct);
-        }
+        Debug.LogFormat("Array length: {0}", _correct.Capacity);
+        Debug.LogFormat("{0}: {1}", index, correctWord.Word);
+        _correct[index] = correctWord.Word;
+        Renderer.Render(_correct);
     }
+
+
+    public void RegisterKnowledge(KnowledgeManager knowledge)
+    {
+        AnswersCount = knowledge.AnswerCount;
+    }
+
     public override void ResetManager()
     {
-        Correct.Clear();
-        Renderer.Render(Correct);
+        _correct.Clear();
+        Renderer.Render(_correct);
     }
 }

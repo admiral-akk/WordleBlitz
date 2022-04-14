@@ -50,16 +50,21 @@ public class KnowledgeManager : BaseManager
         }
     }
 
+    private Dictionary<Word, int> _indices;
+
     private void GenerateDailyAnswers()
     {
         DailyAnswers.Clear();
+        _indices = new Dictionary<Word, int>();
         UnityEngine.Random.InitState(DateTime.Today.GetHashCode());
         DailyAnswers.Add("BLITZ");
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
         for (var i = 0; i < DailyAnswerCount; i++)
         {
-            DailyAnswers.Add(_dictionary.GetRandomWord(WordLength));
+            var word = _dictionary.GetRandomWord(WordLength);
+            DailyAnswers.Add(word);
+            _indices[word] = i;
             Debug.LogFormat("{0}: {1}", i, DailyAnswers[i + 1]);
         }
     }
@@ -80,9 +85,10 @@ public class KnowledgeManager : BaseManager
         GuessKnowledge.UpdateKnowledge(guess);
     }
 
-    public AnnotatedWord Annotate(Word guess)
+    public (int, AnnotatedWord) Annotate(Word guess)
     {
-        return GuessKnowledge.Annotate(guess);
+        var annotated = GuessKnowledge.Annotate(guess);
+        return (_indices.ContainsKey(guess) ? _indices[guess] : -1, annotated);
     }
 
     public LetterKnowledge GlobalKnowledge(char c)
@@ -102,6 +108,8 @@ public class KnowledgeManager : BaseManager
     public void NewProblem()
     {
         DailyAnswers.RemoveAt(0);
+        if (IsGameOver)
+            return;
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
     }
@@ -117,5 +125,6 @@ public class KnowledgeManager : BaseManager
     }
 
 
+    public int AnswerCount => DailyAnswerCount;
     public bool IsGameOver => DailyAnswers.Count == 0;
 }

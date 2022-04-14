@@ -71,6 +71,7 @@ public class GameController : MonoBehaviour
         Knowledge.RegisterDictionary(Dictionary);
         Guess.RegisterDictionary(Dictionary);
         Guess.RegisterKnowledge(Knowledge);
+        Score.RegisterKnowledge(Knowledge);
         Input.UpdateKnowledge(Knowledge);
     }
     #endregion
@@ -102,11 +103,12 @@ public class GameController : MonoBehaviour
             return;
         Knowledge.UpdateKnowledge(guess.Guess);
         Dictionary.Guess(guess.Guess);
-        var annotatedGuess = Knowledge.Annotate(guess.Guess);
+        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
         Timer.UpdateTime(Time.fixedDeltaTime);
-        Score.HandleGuess(annotatedGuess);
+        if (answerIndex >= 0)
+            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
         if (Knowledge.Correct(guess.Guess))
         {
             Knowledge.NewProblem();
