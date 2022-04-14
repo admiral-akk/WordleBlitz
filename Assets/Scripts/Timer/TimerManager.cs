@@ -34,15 +34,15 @@ public class TimerManager : BaseManager
     public override IEnumerator Initialize()
     {
         S = State.Waiting;
-        TimeLeft = GameDuration;
+        TimeLeft = 0;
         yield break;
     }
 
-    public void DecrementTime(float deltaTime)
+    public void UpdateTime(float deltaTime)
     {
         if (S != State.Started)
             return;
-        TimeLeft -= deltaTime;
+        TimeLeft += deltaTime;
     }
 
     public void IncrementTime()
@@ -56,8 +56,6 @@ public class TimerManager : BaseManager
     {
         if (guess.Word == "BLITZ")
             S = State.Started;
-        else if (guess.Correct)
-            IncrementTime();
     }
 
     public override void ResetManager()

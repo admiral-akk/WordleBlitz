@@ -88,12 +88,12 @@ public class GameController : MonoBehaviour
                 ResetGame();
                 return;
         }
-        if (Timer.TimeLeft < 0f)
+        if (Knowledge.IsGameOver)
         {
-            EndGame.GameOver(History.GetCorrectGuesses(), Knowledge.SpoilAnswer());
+            EndGame.GameOver(History.GetCorrectGuesses(), "NONE");
             return;
         }
-        Timer.DecrementTime(Time.fixedDeltaTime);
+        Timer.UpdateTime(Time.fixedDeltaTime);
         var guess = Guess.HandleInput(input);
         if (guess.S == GuessResult.State.None)
             return;
@@ -105,7 +105,7 @@ public class GameController : MonoBehaviour
         var annotatedGuess = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
-        Timer.DecrementTime(Time.fixedDeltaTime);
+        Timer.UpdateTime(Time.fixedDeltaTime);
         Score.HandleGuess(annotatedGuess);
         if (Knowledge.Correct(guess.Guess))
         {
