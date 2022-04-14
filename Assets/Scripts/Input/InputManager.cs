@@ -7,7 +7,6 @@ using static CommandKeyRenderer;
 public class InputManager : BaseManager
 {
     [SerializeField] private KeyboardRenderer Keyboard;
-    [SerializeField] private Button NewGameButton;
 
     private Dictionary<char, KeyRenderer> _keys;
     private Dictionary<char, KeyRenderer> Keys
@@ -44,7 +43,6 @@ public class InputManager : BaseManager
     }
     public override IEnumerator Initialize()
     {
-        NewGameButton.onClick.AddListener(NewGame);
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
         InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Delete), Command.Delete);

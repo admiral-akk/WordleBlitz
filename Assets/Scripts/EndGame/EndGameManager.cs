@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndGameManager : BaseManager
 {
     [SerializeField] private Canvas EndScreen;
     [SerializeField] private TextMeshProUGUI Words;
     [SerializeField] private TextMeshProUGUI Score;
-    [SerializeField] private TextMeshProUGUI NextWord;
+    [SerializeField] private ShareStringRenderer Share;
 
     private enum State
     {
@@ -36,42 +37,20 @@ public class EndGameManager : BaseManager
     public override IEnumerator Initialize()
     {
         S = State.InProgress;
+        Share.Initialize();
         yield break;
     }
 
-    public void GameOver(float timeTaken, List<Tuple<Word, int>> guessesRequired)
+    public void GameOver(float timeTaken, List<Tuple<Word, int>> guessesRequired, List<AnnotatedWord> history)
     {
         var time = TimeSpan.FromSeconds(timeTaken);
-        Score.text = string.Format("Time: {0}:{1}", time.Minutes, time.Seconds);
+        Share.RenderGuesses(time, history, guessesRequired);
+        Score.text = string.Format("Time: {0}:{1:00.}", time.Minutes, time.Seconds);
         Words.text = "";
         foreach (var (word, count) in guessesRequired)
         {
             Words.text += string.Format("{0}: {1}\n", word, count);
         }
-        NextWord.text = "";
-        S = State.GameOver;
-    }
-
-    public void GameOver(List<Word> successful, Word nextAnswer)
-    {
-        if (successful.Count < 1)
-            Score.text = string.Format("You didn't get any words!", successful.Count);
-        if (successful.Count == 1)
-            Score.text = string.Format("You got a word!", successful.Count);
-        if (successful.Count > 1)
-            Score.text = string.Format("You got {0} words!", successful.Count);
-        if (successful.Count == 0){ 
-            Words.text = ""; 
-        }
-        if (successful.Count > 0)
-        {
-            var wordList = successful
-                .Select(w => w.ToString())
-                .Aggregate("", (s1, acc) => s1 + ", " + acc);
-            Words.text = wordList.Substring(2, wordList.Length - 2);
-        }
-
-        NextWord.text = string.Format("Next word: '{0}'", nextAnswer);
         S = State.GameOver;
     }
 

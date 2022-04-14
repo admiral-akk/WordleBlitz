@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class HistoryManager : BaseManager
 {
     [SerializeField] private HistoryRenderer Renderer;
-    [SerializeField] private HistoryStringRenderer StringRenderer;
 
     private List<AnnotatedWord> _guesses;
     private List<AnnotatedWord> Guesses
@@ -23,13 +22,11 @@ public class HistoryManager : BaseManager
     {
         Guesses.Add(guess);
         Renderer.RenderGuess(guess);
-        StringRenderer.RenderGuesses(Guesses);
     }
 
     public override IEnumerator Initialize()
     {
         ResetManager(); 
-        StringRenderer.Initialize();
         yield break;
     }
 
@@ -41,10 +38,14 @@ public class HistoryManager : BaseManager
             .ToList();
     }
 
+    public List<AnnotatedWord> GetHistory()
+    {
+        return new List<AnnotatedWord>(Guesses);
+    }
+
     public override void ResetManager()
     {
         Guesses.Clear();
         Renderer.Clear();
-        StringRenderer.Clear();
     }
 }

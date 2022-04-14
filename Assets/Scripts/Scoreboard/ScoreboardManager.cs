@@ -20,8 +20,6 @@ public class ScoreboardManager : BaseManager
 
     public void HandleCorrectGuess(AnnotatedWord correctWord, int index)
     {
-        Debug.LogFormat("Array length: {0}", _correct.Capacity);
-        Debug.LogFormat("{0}: {1}", index, correctWord.Word);
         _correct[index] = correctWord.Word;
         Renderer.Render(_correct);
     }

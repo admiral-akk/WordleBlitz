@@ -69,7 +69,6 @@ public class KnowledgeManager : BaseManager
             DailyAnswers.Add(word);
             _indices[word] = i;
             _guesses[word] = 0;
-            Debug.LogFormat("{0}: {1}", i, DailyAnswers[i + 1]);
         }
     }
     public override IEnumerator Initialize()

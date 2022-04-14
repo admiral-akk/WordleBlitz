@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -91,7 +91,7 @@ public class GameController : MonoBehaviour
         }
         if (Knowledge.IsGameOver)
         {
-            EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired);
+            EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired, History.GetHistory());
             return;
         }
         Timer.UpdateTime(Time.fixedDeltaTime);

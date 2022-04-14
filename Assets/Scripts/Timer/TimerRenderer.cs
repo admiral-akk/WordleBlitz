@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,7 +14,8 @@ public class TimerRenderer : MonoBehaviour
 
     public void SetRemainingSeconds(float secondsLeft)
     {
-        Timer.text = string.Format("{0:000.}", Mathf.Max(secondsLeft, 0));
+        var time = TimeSpan.FromSeconds(secondsLeft);
+        Timer.text = string.Format("{0}:{1:00.}", time.Minutes, time.Seconds);
     }
 
     private void Awake()
