@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HistoryManager : BaseManager
 {
     [SerializeField] private HistoryRenderer Renderer;
+    [SerializeField] private HistoryStringRenderer StringRenderer;
 
     private List<AnnotatedWord> _guesses;
     private List<AnnotatedWord> Guesses
@@ -21,15 +23,15 @@ public class HistoryManager : BaseManager
     {
         Guesses.Add(guess);
         Renderer.RenderGuess(guess);
+        StringRenderer.RenderGuesses(Guesses);
     }
 
     public override IEnumerator Initialize()
     {
-        ResetManager();
+        ResetManager(); 
+        StringRenderer.Initialize();
         yield break;
     }
-
-
 
     public List<Word> GetCorrectGuesses()
     {
@@ -43,5 +45,6 @@ public class HistoryManager : BaseManager
     {
         Guesses.Clear();
         Renderer.Clear();
+        StringRenderer.Clear();
     }
 }
