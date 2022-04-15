@@ -26,7 +26,7 @@ public class HistoryManager : BaseManager
 
     public override IEnumerator Initialize()
     {
-        ResetManager(); 
+        ResetManager();
         yield break;
     }
 

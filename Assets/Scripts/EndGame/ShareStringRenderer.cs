@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ public class ShareStringRenderer : MonoBehaviour
     [SerializeField] private string Green;
     [SerializeField] private string Yellow;
     [SerializeField] private string Gray;
+    [SerializeField] private Prompt CopyPrompt;
+
 
     private string _renderedGuesses;
 
@@ -18,9 +21,21 @@ public class ShareStringRenderer : MonoBehaviour
         Share.onClick.AddListener(CopyGuessesToClipboard);
     }
 
+    [DllImport("__Internal")]
+    private static extern void CopyToClipboard(string text);
+
+    public static void SetText(string text)
+    {
+        #if UNITY_WEBGL && UNITY_EDITOR == false
+            CopyToClipboard(text);
+        #else
+            GUIUtility.systemCopyBuffer = text;
+        #endif
+    }
     private void CopyGuessesToClipboard()
     {
-        GUIUtility.systemCopyBuffer = _renderedGuesses;
+        SetText(_renderedGuesses);
+        CopyPrompt.PromptAnimation(0.2f, 0.3f, 1.5f);
     }
     public void RenderGuesses(TimeSpan time, List<AnnotatedWord> guesses, List<Tuple<Word, int>> guessesRequired)
     {
