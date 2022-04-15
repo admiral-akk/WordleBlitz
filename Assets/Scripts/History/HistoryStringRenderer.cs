@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,9 +18,20 @@ public class HistoryStringRenderer : MonoBehaviour
         Share.onClick.AddListener(CopyGuessesToClipboard);
     }
 
+    [DllImport("__Internal")]
+    private static extern void CopyToClipboard(string text);
+
+    public static void SetText(string text)
+    {
+#if UNITY_WEBGL && UNITY_EDITOR == false
+            CopyToClipboard(text);
+#else
+        GUIUtility.systemCopyBuffer = text;
+#endif
+    }
     private void CopyGuessesToClipboard()
     {
-        GUIUtility.systemCopyBuffer = _renderedGuesses;
+        SetText(_renderedGuesses);
     }
     public void RenderGuesses(List<AnnotatedWord> guesses)
     {

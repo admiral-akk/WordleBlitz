@@ -2751,6 +2751,7 @@ MonoBehaviour:
   EndGame: {fileID: 1571626598}
   Prompt: {fileID: 856430074}
   Score: {fileID: 1036400768}
+  TextToCopy: "\U0001F7E9\U0001F7E9"
 --- !u!4 &672501820
 Transform:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -23,7 +22,7 @@ public class GameController : MonoBehaviour
     {
         StartCoroutine(InitializeManagers());
     }
-    private IEnumerator InitializeManager(BaseManager manager)
+        private IEnumerator InitializeManager(BaseManager manager)
     {
         _waitingOnManagers++;
         yield return manager.Initialize();
@@ -75,7 +74,6 @@ public class GameController : MonoBehaviour
         Input.UpdateKnowledge(Knowledge);
     }
     #endregion
-
     private bool Initialized => _waitingOnManagers == 0;
 
     private void FixedUpdate()

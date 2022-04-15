@@ -2,39 +2,28 @@
 
 public abstract class ParameterizedAnimation<T, AnimationType> : MonoBehaviour where T : IAnimationParameters where AnimationType : ParameterizedAnimation<T, AnimationType>
 {
-    private float _duration;
     private float _time;
-    private enum State
+    private void Initialize(T parameters)
     {
-        None,
-        Started,
-    }
-    private State _state;
-
-    protected abstract void Animate(float t);
-    public void Initialize(T parameters)
-    {
-        SetParameters(parameters);
+        Parameters = parameters;
         _time = 0f;
-        _duration = parameters.Duration;
-        _state = State.Started;
     }
-    protected abstract void SetParameters(T parameters);
 
     private void Update()
     {
-        if (_state == State.None)
-            return;
         _time += Time.deltaTime;
-        if (_time > _duration)
+        if (_time > Parameters.Duration)
             Destroy(this);
         else
-            Animate(_time / _duration);
+            Animate(_time / Parameters.Duration);
     }
     private void OnDestroy()
     {
         Animate(1f);
     }
+
+    protected T Parameters;
+    protected abstract void Animate(float t);
 
     public static void AddAnimation(GameObject target, T parameters)
     {

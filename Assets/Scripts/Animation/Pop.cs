@@ -13,16 +13,9 @@ public struct PopParameters : IAnimationParameters
 
 public class Pop : ParameterizedAnimation<PopParameters, Pop>
 {
-    private float _magnitude;
-
-
     protected override void Animate(float t)
     {
-        transform.localScale = Vector3.one * (1 + _magnitude * (1 - Mathf.Abs(2 * t - 1)));
-    }
-
-    protected override void SetParameters(PopParameters parameters)
-    {
-        _magnitude = parameters.Magnitude;
+        float size =  1 + Parameters.Magnitude * (1 - Mathf.Abs(2 * t - 1));
+        transform.localScale = Vector3.one * size;
     }
 }

@@ -17,19 +17,9 @@ public struct MoveParameters : IAnimationParameters
 
 public class Move : ParameterizedAnimation<MoveParameters, Move>
 {
-    private Vector3 _start;
-    private Vector3 _target;
-    private AnimationCurve _curve;
-
     protected override void Animate(float t)
     {
-        transform.position = Vector3.Lerp(_start, _target, Mathf.Clamp01(_curve.Evaluate(t)));
-    }
-
-    protected override void SetParameters(MoveParameters parameters)
-    {
-        _start = parameters.Start;
-        _target = parameters.Target;
-        _curve = parameters.Curve;
+        transform.position = Vector3.Lerp(Parameters.Start, 
+            Parameters.Target, Mathf.Clamp01(Parameters.Curve.Evaluate(t)));
     }
 }
