@@ -542,6 +542,7 @@ MonoBehaviour:
   Yellow: "\U0001F7E8"
   Gray: "\u2B1C"
   CopyPrompt: {fileID: 1134190745}
+  GameUrl: https://magikarpierz.com/games/wordle-blitz.html
 --- !u!1 &148253947
 GameObject:
   m_ObjectHideFlags: 0

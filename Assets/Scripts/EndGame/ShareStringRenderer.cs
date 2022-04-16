@@ -12,6 +12,7 @@ public class ShareStringRenderer : MonoBehaviour
     [SerializeField] private string Yellow;
     [SerializeField] private string Gray;
     [SerializeField] private Prompt CopyPrompt;
+    [SerializeField] private string GameUrl;
 
 
     private string _renderedGuesses;
@@ -80,6 +81,9 @@ public class ShareStringRenderer : MonoBehaviour
             sb.Append(s);
             sb.AppendLine(Green);
         }
+
+        sb.AppendLine();
+        sb.AppendLine(GameUrl);
         _renderedGuesses = sb.ToString();
     }
 
