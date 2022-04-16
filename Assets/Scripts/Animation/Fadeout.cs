@@ -20,7 +20,7 @@ public struct FadeoutParameters : IAnimationParameters
     }
 }
 
-public class Fadeout : ParameterizedAnimation<FadeoutParameters, Fadeout> {
+public class Fadeout : BaseAnimation<FadeoutParameters, Fadeout> {
     protected override void Animate(float t)
     {
         float alpha = t < Parameters.Start ? 1f : 1 - (t - Parameters.Start) / (1 - Parameters.Start);

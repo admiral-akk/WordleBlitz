@@ -1,29 +1,38 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class BaseAnimation : MonoBehaviour
+public abstract class BaseAnimation<ParameterType, AnimationType> : MonoBehaviour 
+    where ParameterType : IAnimationParameters 
+    where AnimationType : BaseAnimation<ParameterType, AnimationType>
 {
-    private float _duration;
-    private float _timeLeft;
-    private void Awake()
+    private float _time;
+    private void Initialize(ParameterType parameters)
     {
-        if (GetComponents<BaseAnimation>().Length > 1)
-            Destroy(this);
-        _timeLeft = 0;
-        _duration = SetDuration();
+        Parameters = parameters;
+        _time = 0f;
     }
-
-    protected abstract float SetDuration();
-    protected abstract void ApplyAnimation(float t);
 
     private void Update()
     {
-        _timeLeft += Time.deltaTime;
-        ApplyAnimation(_timeLeft / _duration);
-       if (_timeLeft >= _duration)
+        _time += Time.deltaTime;
+        if (_time > Parameters.Duration)
             Destroy(this);
+        else
+            Animate(_time / Parameters.Duration);
     }
     private void OnDestroy()
     {
-        ApplyAnimation(1);
+        Animate(1f);
+    }
+
+    protected ParameterType Parameters;
+    protected abstract void Animate(float t);
+
+    public static void AddAnimation(GameObject target, ParameterType parameters)
+    {
+        var existingAnimation = target.GetComponent<AnimationType>();
+        if (existingAnimation != null)
+            Destroy(existingAnimation);
+        var animation = (AnimationType)target.AddComponent(typeof(AnimationType));
+        animation.Initialize(parameters);
     }
 }
