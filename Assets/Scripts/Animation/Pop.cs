@@ -11,7 +11,7 @@ public struct PopParameters : IAnimationParameters
     }
 }
 
-public class Pop : ParameterizedAnimation<PopParameters, Pop>
+public class Pop : BaseAnimation<PopParameters, Pop>
 {
     protected override void Animate(float t)
     {

@@ -15,7 +15,7 @@ public struct MoveParameters : IAnimationParameters
     }
 }
 
-public class Move : ParameterizedAnimation<MoveParameters, Move>
+public class Move : BaseAnimation<MoveParameters, Move>
 {
     protected override void Animate(float t)
     {

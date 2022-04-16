@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 
-public abstract class ParameterizedAnimation<T, AnimationType> : MonoBehaviour where T : IAnimationParameters where AnimationType : ParameterizedAnimation<T, AnimationType>
+public abstract class BaseAnimation<ParameterType, AnimationType> : MonoBehaviour 
+    where ParameterType : IAnimationParameters 
+    where AnimationType : BaseAnimation<ParameterType, AnimationType>
 {
     private float _time;
-    private void Initialize(T parameters)
+    private void Initialize(ParameterType parameters)
     {
         Parameters = parameters;
         _time = 0f;
@@ -22,10 +24,10 @@ public abstract class ParameterizedAnimation<T, AnimationType> : MonoBehaviour w
         Animate(1f);
     }
 
-    protected T Parameters;
+    protected ParameterType Parameters;
     protected abstract void Animate(float t);
 
-    public static void AddAnimation(GameObject target, T parameters)
+    public static void AddAnimation(GameObject target, ParameterType parameters)
     {
         var existingAnimation = target.GetComponent<AnimationType>();
         if (existingAnimation != null)
