@@ -2,27 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerManager : NewBaseManager<TimeUpdate>
+public class TimerManager : NewBaseManager<TimeData, TimeUpdate>
 {
-    [SerializeField] private TimerRenderer Renderer;
-    [SerializeField, Range(10, 180)] private float GameDuration;
-    [SerializeField, Range(0, 20)] private float TimeIncrement;
-
-    private float _timeLeft;
-    public float TimeLeft
-    {
-        get => _timeLeft;
-        private set
-        {
-            _timeLeft = value;
-            Renderer.SetRemainingSeconds(_timeLeft);
-        }
-    }
-
     private enum State
     {
-        Waiting, 
-        Started
+        None,
+        Paused,
+        Started,
     }
 
     private State S
@@ -32,40 +18,39 @@ public class TimerManager : NewBaseManager<TimeUpdate>
     }
 
     private TimeData _data;
-    protected override NewBaseData<TimeUpdate> Data {
+    protected override TimeData Data {
         get => _data ??= new TimeData();
     }
 
     public override IEnumerator Initialize()
     {
-        S = State.Waiting;
-        TimeLeft = 0;
+        S = State.None;
+        UpdateData(Data.Reset());
         yield break;
     }
 
-    public void UpdateTime(float deltaTime)
+    private void FixedUpdate()
     {
         if (S != State.Started)
             return;
-        TimeLeft += deltaTime;
+        UpdateData(Data.Increment(Time.fixedDeltaTime));
     }
 
-    public void IncrementTime()
-    {
-        TimeLeft += TimeIncrement;
-        TimeLeft = Mathf.Min(GameDuration - 0.01f, TimeLeft);
-        Renderer.IncrementTime(TimeIncrement);
-    }
-
+    // Should be a "game started" listener.
     public void GuessSubmitted(AnnotatedWord guess)
     {
         if (guess.Word == "BLITZ")
             S = State.Started;
     }
 
+    public void GameOver() {
+        S = State.Paused;
+    }
+
     public override void ResetManager()
     {
-        S = State.Waiting;
-        TimeLeft = GameDuration;
+        S = State.Paused;
+        UpdateData(Data.Reset());
     }
+    public float TimeLeft => Data.Time;
 }

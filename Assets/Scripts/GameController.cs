@@ -89,10 +89,10 @@ public class GameController : MonoBehaviour
         }
         if (Knowledge.IsGameOver)
         {
+            Timer.GameOver();
             EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired, History.GetHistory());
             return;
         }
-        Timer.UpdateTime(Time.fixedDeltaTime);
         var guess = Guess.HandleInput(input);
         if (guess.S == GuessResult.State.None)
             return;
@@ -104,7 +104,6 @@ public class GameController : MonoBehaviour
         var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
-        Timer.UpdateTime(Time.fixedDeltaTime);
         if (answerIndex >= 0)
             Score.HandleCorrectGuess(annotatedGuess, answerIndex);
         if (Knowledge.Correct(guess.Guess))

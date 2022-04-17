@@ -3,24 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class NewUpdateType
-{
-
-}
-
-public interface IUpdateConsumer<UpdateType> where UpdateType : NewUpdateType
+public interface IUpdateObserver<UpdateType>
 {
     public void HandleUpdate(UpdateType update);
 }
-public class NewBaseData<UpdateType> where UpdateType : NewUpdateType
+public abstract class NewBaseData<UpdateType> : IUpdateObserver<UpdateType>
 {
     private List<UpdateType> _updates;
-    private List<UpdateType> Updates { get => _updates ??= new List<UpdateType>(); }
+    private List<UpdateType> Updates => _updates ??= new List<UpdateType>(); 
     public bool HasUpdates => _updates.Count > 0;
-
-    protected void AddUpdate(UpdateType update)
-    {
-        Updates.Add(update);
-    }
-
+    protected void Queue(UpdateType update) => Updates.Add(update);
+    public abstract void HandleUpdate(UpdateType update);
 }

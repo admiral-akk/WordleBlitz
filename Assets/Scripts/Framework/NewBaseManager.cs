@@ -2,25 +2,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class NewBaseManager<UpdateType> : BaseManager
-    where UpdateType : NewUpdateType
-{
-    protected abstract NewBaseData<UpdateType> Data { get; }
 
-    private List<IUpdateConsumer<UpdateType>> _observers;
-    private List<IUpdateConsumer<UpdateType>> Observers
-    {
-        get
-        {
-            if (_observers == null)
-                _observers = new List<IUpdateConsumer<UpdateType>>();
-            return _observers;
-        }
+public abstract class NewBaseManager<DataType, UpdateType> : BaseManager where DataType : NewBaseData<UpdateType>
+{
+    protected abstract DataType Data { get; }
+
+    private List<IUpdateObserver<UpdateType>> _observers;
+    private List<IUpdateObserver<UpdateType>> Observers => _observers ??= new List<IUpdateObserver<UpdateType>>();
+
+    protected void UpdateData(UpdateType update) {
+        Data.HandleUpdate(update);
+        foreach (var observer in Observers)
+            observer.HandleUpdate(update);
     }
 
-    private void RegisterObservers(List<MonoBehaviour> components)
-    {
-        foreach (var observer in components.OfType<IUpdateConsumer<UpdateType>>())
+    private void Awake() {
+        var observers = GetComponents<MonoBehaviour>().OfType<IUpdateObserver<UpdateType>>();
+        foreach (var observer in observers)
             Observers.Add(observer);
     }
 }
