@@ -2675,7 +2675,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 672501820}
-  - component: {fileID: 672501819}
   - component: {fileID: 672501823}
   - component: {fileID: 672501822}
   - component: {fileID: 672501821}
@@ -2689,6 +2688,7 @@ GameObject:
   - component: {fileID: 672501831}
   - component: {fileID: 672501833}
   - component: {fileID: 672501832}
+  - component: {fileID: 672501819}
   m_Layer: 0
   m_Name: GameEntity
   m_TagString: Untagged
@@ -2705,18 +2705,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 672501818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cec11fc631648c54e80986ec3f9a7801, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c9df5f08afa02741bf110b4980eff80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Input: {fileID: 0}
-  Guess: {fileID: 672501827}
-  History: {fileID: 672501829}
-  Knowledge: {fileID: 672501826}
-  Timer: {fileID: 672501823}
-  EndGame: {fileID: 0}
-  Prompt: {fileID: 672501828}
-  Score: {fileID: 672501830}
-  _waitingOnManagers: 0
+  text: {fileID: 997152383}
 --- !u!4 &672501820
 Transform:
   m_ObjectHideFlags: 0
@@ -2859,7 +2851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea1b3a59c0c2baf49a157dc691377a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Renderer: {fileID: 1448876368}
+  Renderer: {fileID: 672501819}
 --- !u!114 &672501831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5537,7 +5529,6 @@ GameObject:
   - component: {fileID: 1448876367}
   - component: {fileID: 1448876366}
   - component: {fileID: 1448876365}
-  - component: {fileID: 1448876368}
   m_Layer: 5
   m_Name: Scoreboard
   m_TagString: Untagged
@@ -5628,19 +5619,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1448876368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448876363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c9df5f08afa02741bf110b4980eff80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 997152383}
 --- !u!1 &1458112468
 GameObject:
   m_ObjectHideFlags: 0
