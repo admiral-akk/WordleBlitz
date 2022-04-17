@@ -1,27 +1,21 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class DictionaryManager : BaseManager
-{
-    private List<WordDictionary> _words;
-    private List<WordDictionary> _answers;
-    private HashSet<Word> _usedWords;
+public abstract class DictionaryManager<LexiconUpdateType> : MonoBehaviour 
+    where LexiconUpdateType : BaseUpdate<LexiconUpdateType> {
+    [SerializeField] private string FileName;
 
-    private static string _wordPath = Application.streamingAssetsPath + "/GeneratedWords.txt";
-    private static string _answerPath = Application.streamingAssetsPath + "/GeneratedAnswers.txt";
+    private string FilePath => Application.streamingAssetsPath + "/" + FileName;
 
-    public override IEnumerator Initialize()
-    {
-        _words = new List<WordDictionary>();
-        _answers = new List<WordDictionary>();
-        _usedWords = new HashSet<Word>();
-        yield return FillWordCollection(_wordPath, _words);
-        yield return FillWordCollection(_answerPath, _answers);
-        Debug.Log("Dictionary loaded");
+    protected abstract LexiconUpdateType GenerateLexicon(List<WordDictionary> words);
+
+    protected IEnumerator ReadLexiconFile() {
+        var temp = new List<WordDictionary>();
+        yield return FillWordCollection(FilePath, temp);
+        GenerateLexicon(temp).Emit(gameObject);
     }
     private static void AddWord(Word word, List<WordDictionary> collection)
     {
@@ -65,39 +59,7 @@ public class DictionaryManager : BaseManager
         }
     }
 
-    public void Guess(Word guess)
-    {
-        _usedWords.Add(guess);
-    }
-
-    public bool IsValidWord(Word guess)
-    {
-        var len = guess.Length;
-        if (len == 0)
-            return false;
-        if (len > _words.Count)
-            return false;
-        return _words[len - 1].IsValidWord(guess);
-    }
-
-    public bool IsUsedWord(Word guess)
-    {
-        return _usedWords.Contains(guess);
-    }
-
-
-    public Word GetRandomWord(int length)
-    {
-        if (length < 1 || length > _answers.Count)
-            throw new System.Exception(string.Format("Length {0} out of array bounds!", length));
-        var newAnswer = _answers[length - 1].GetRandomWord();
-        while (_usedWords.Contains(newAnswer))
-            newAnswer = _answers[length - 1].GetRandomWord();
-        return newAnswer;
-    }
-
-    public override void ResetManager()
-    {
-        _usedWords.Clear();
+    private void Awake() {
+        StartCoroutine(ReadLexiconFile());
     }
 }

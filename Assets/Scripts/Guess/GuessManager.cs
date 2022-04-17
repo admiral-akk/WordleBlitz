@@ -1,76 +1,103 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GuessManager : BaseManager
-{
+
+public class GuessEntered : BaseUpdate<GuessEntered> {
+    public Word Guess;
+    public GuessEntered(Word guess) {
+        Guess = guess;
+    }
+}
+
+public class GuessError : BaseUpdate<GuessError> {
+    public enum ErrorType {
+        None,
+        TooShort,
+        InvalidWord,
+        ReusedWord,
+        NonBlitz,
+    }
+    public ErrorType Type;
+
+    public GuessError(ErrorType type) {
+        Type = type;
+    }
+}
+
+public class GuessManager : MonoBehaviour,
+    IUpdateObserver<GuessEntered>,
+    IUpdateObserver<ValidLexiconInitialized>,
+    IUpdateObserver<PlayerInput>,
+    IUpdateObserver<KnowledgeInitialized> {
     [SerializeField] private GuessRenderer Renderer;
 
-    private DictionaryManager _dictionary;
+    private IWordValidator _wordValidator;
     private KnowledgeManager _knowledge;
+    private List<Word> _guesses;
+    public List<Word> Guesses => _guesses ??= new List<Word>();
 
     private Word _guess;
-    private Word Guess
-    {
+    private Word Guess {
         get => _guess;
-        set
-        {
+        set {
             _guess = value;
-            Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
+            if (_knowledge != null)
+                Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
         }
     }
 
+    private HashSet<Word> _usedWords;
+    private HashSet<Word> UsedWords => _usedWords ??= new HashSet<Word>();
 
-    private Word _currentAnswer;
-    private Word CurrentAnswer
-    {
-        get => _currentAnswer;
-        set
-        {
-            _currentAnswer = value;
-        }
-    }
-    public GuessResult HandleInput(PlayerInput input)
-    {
-        switch (input.InputType)
-        {
+    public void Handle(PlayerInput update) {
+        switch (update.InputType) {
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
-                if (!_dictionary.IsUsedWord("BLITZ") && Guess != "BLITZ")
-                    return new GuessResult(Guess, GuessResult.State.NonBlitz);
-                if (Guess.Length < _knowledge.Length)
-                    return new GuessResult(Guess, GuessResult.State.TooShort);
-                if (!_dictionary.IsValidWord(Guess))
-                    return new GuessResult(Guess, GuessResult.State.InvalidWord);
-                if (_dictionary.IsUsedWord(Guess))
-                    return new GuessResult(Guess, GuessResult.State.ReusedWord);
+                if (!UsedWords.Contains("BLITZ") && Guess != "BLITZ") {
+                    new GuessError(GuessError.ErrorType.NonBlitz).Emit(gameObject);
+                    return;
+                }
+                if (Guess.Length < _knowledge.Length) {
+                    new GuessError(GuessError.ErrorType.TooShort).Emit(gameObject);
+                    return;
+                }
+                if (!_wordValidator.Valid(Guess)) {
+                    new GuessError(GuessError.ErrorType.InvalidWord).Emit(gameObject);
+                    return;
+                }
+                if (UsedWords.Contains(Guess)) {
+                    new GuessError(GuessError.ErrorType.ReusedWord).Emit(gameObject);
+                    return;
+                }
                 var guess = Guess;
+                _usedWords.Add(guess);
                 Guess = "";
-                return new GuessResult(guess, GuessResult.State.Valid);
+                new GuessEntered(guess).Emit(gameObject);
+                return;
             case PlayerInput.Type.Delete:
                 Guess = Guess.RemoveEnd();
                 break;
             case PlayerInput.Type.HitKey:
                 if (Guess.Length < _knowledge.Length)
-                    Guess += input.Letter;
+                    Guess += update.Letter;
                 break;
         }
-        return new GuessResult(GuessResult.State.None);
     }
 
-    public void RegisterDictionary(DictionaryManager dictionary)
-    {
-        _dictionary = dictionary;
-    }
-
-    public void RegisterKnowledge(KnowledgeManager knowledge)
-    {
-        _knowledge = knowledge;
+    #region Observers
+    public void Handle(KnowledgeInitialized update) {
+        _knowledge = update.Knowledge;
         Guess = "";
     }
 
-    public override void ResetManager()
-    {
+    public void Handle(ValidLexiconInitialized update) {
+        _wordValidator = update.Validator;
         Guess = "";
     }
+
+    public void Handle(GuessEntered update) {
+        Guesses.Add(update.Guess);
+    }
+    #endregion
 }

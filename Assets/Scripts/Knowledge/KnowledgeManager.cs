@@ -1,18 +1,41 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static CharacterKnowledge;
 
-public class KnowledgeManager : BaseManager
-{
+public class KnowledgeInitialized : BaseUpdate<KnowledgeInitialized> {
+    public KnowledgeManager Knowledge;
+
+    public KnowledgeInitialized(KnowledgeManager knowledge) {
+        Knowledge = knowledge;
+    }
+}
+
+public class GuessAnnotated : BaseUpdate<GuessAnnotated> {
+    public AnnotatedWord AnnotatedGuess;
+    public int AnswerIndex;
+    public GuessAnnotated(AnnotatedWord annotatedGuess, int answerIndex) {
+        AnnotatedGuess = annotatedGuess;
+        AnswerIndex = answerIndex;
+    }
+}
+
+public class NewAnswer : BaseUpdate<NewAnswer> { }
+
+public class GameOver : BaseUpdate<GameOver> {
+    public GameOver() { }
+}
+
+public class KnowledgeManager : BaseManager, 
+    IUpdateObserver<AnswerGeneratorInitialized>,
+    IUpdateObserver<GuessEntered> {
     [SerializeField] private int WordLength;
     [SerializeField] private int DailyAnswerCount;
 
     public int Length => WordLength;
 
-    private DictionaryManager _dictionary;
+    private IAnswerGenerator _answerGenerator;
 
     private KeyboardKnowledge _keyboardKnowledge;
     public KeyboardKnowledge KeyboardKnowledge
@@ -65,21 +88,13 @@ public class KnowledgeManager : BaseManager
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
         for (var i = 0; i < DailyAnswerCount; i++)
         {
-            var word = _dictionary.GetRandomWord(WordLength);
+            var word = _answerGenerator.GetAnswer(WordLength);
+            while (DailyAnswers.Contains(word))
+                word = _answerGenerator.GetAnswer(WordLength);
             DailyAnswers.Add(word);
             _indices[word] = i;
             _guesses[word] = 0;
         }
-    }
-    public override IEnumerator Initialize()
-    {
-        yield break;
-    }
-
-    public void RegisterDictionary(DictionaryManager dictionary)
-    {
-        _dictionary = dictionary;
-        GenerateDailyAnswers();
     }
 
     public void UpdateKnowledge(Word guess)
@@ -113,10 +128,13 @@ public class KnowledgeManager : BaseManager
     public void NewProblem()
     {
         DailyAnswers.RemoveAt(0);
-        if (IsGameOver)
+        if (DailyAnswers.Count == 0) {
+            new GameOver().Emit(gameObject);
             return;
+        }
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
+        new NewAnswer().Emit(gameObject);
     }
 
     public Word SpoilAnswer()
@@ -127,6 +145,21 @@ public class KnowledgeManager : BaseManager
     public override void ResetManager()
     {
         GenerateDailyAnswers();
+    }
+
+    public void Handle(AnswerGeneratorInitialized update) {
+        _answerGenerator = update.Generator;
+        GenerateDailyAnswers();
+        new KnowledgeInitialized(this).Emit(gameObject);
+    }
+
+    public void Handle(GuessEntered update) {
+        UpdateKnowledge(update.Guess);
+        var (answerIndex, annotatedGuess) = Annotate(update.Guess);
+        new GuessAnnotated(annotatedGuess, answerIndex).Emit(gameObject);
+        if (Correct(update.Guess)) {
+            NewProblem();
+        }
     }
 
     public List<Tuple<Word, int>> GuessesRequired
@@ -146,5 +179,4 @@ public class KnowledgeManager : BaseManager
 
 
     public int AnswerCount => DailyAnswerCount;
-    public bool IsGameOver => DailyAnswers.Count == 0;
 }

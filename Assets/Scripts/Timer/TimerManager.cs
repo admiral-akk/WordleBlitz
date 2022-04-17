@@ -1,28 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerManager : BaseManager
-{
-    [SerializeField] private TimerRenderer Renderer;
-    [SerializeField, Range(10, 180)] private float GameDuration;
-    [SerializeField, Range(0, 20)] private float TimeIncrement;
-
-    private float _timeLeft;
-    public float TimeLeft
-    {
-        get => _timeLeft;
-        private set
-        {
-            _timeLeft = value;
-            Renderer.SetRemainingSeconds(_timeLeft);
-        }
+public class TimeUpdate : BaseUpdate<TimeUpdate> {
+    public float Time;
+    public TimeUpdate(float time) {
+        Time = time;
     }
-
+}
+public class TimerManager : MonoBehaviour, 
+    IUpdateObserver<GuessAnnotated>,
+    IUpdateObserver<GameOver>
+{
     private enum State
     {
-        Waiting, 
-        Started
+        None,
+        Paused,
+        Started,
     }
 
     private State S
@@ -31,36 +24,34 @@ public class TimerManager : BaseManager
         set;
     }
 
-    public override IEnumerator Initialize()
-    {
-        S = State.Waiting;
-        TimeLeft = 0;
-        yield break;
+    private float _timeSpent;
+    public float TimeSpent {
+        get => _timeSpent;
+        private set {
+            _timeSpent = value;
+            new TimeUpdate(_timeSpent).Emit(gameObject);
+        }
     }
 
-    public void UpdateTime(float deltaTime)
+    public void Awake()
+    {
+        S = State.None;
+        TimeSpent = 0;
+    }
+
+    private void FixedUpdate()
     {
         if (S != State.Started)
             return;
-        TimeLeft += deltaTime;
+        TimeSpent += Time.fixedDeltaTime;
     }
 
-    public void IncrementTime()
-    {
-        TimeLeft += TimeIncrement;
-        TimeLeft = Mathf.Min(GameDuration - 0.01f, TimeLeft);
-        Renderer.IncrementTime(TimeIncrement);
-    }
-
-    public void GuessSubmitted(AnnotatedWord guess)
-    {
-        if (guess.Word == "BLITZ")
+    public void Handle(GuessAnnotated update) {
+        if (update.AnnotatedGuess.Word == "BLITZ")
             S = State.Started;
     }
 
-    public override void ResetManager()
-    {
-        S = State.Waiting;
-        TimeLeft = GameDuration;
+    public void Handle(GameOver update) {
+        S = State.Paused;
     }
 }

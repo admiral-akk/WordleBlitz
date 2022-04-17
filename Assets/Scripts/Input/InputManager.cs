@@ -1,24 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using static CommandKeyRenderer;
 
-public class InputManager : BaseManager
+public class InputManager : BaseManager, 
+    IUpdateObserver<KnowledgeInitialized>, 
+    IUpdateObserver<GuessAnnotated>,
+    IUpdateObserver<NewAnswer>
 {
     [SerializeField] private KeyboardRenderer Keyboard;
 
     private Dictionary<char, KeyRenderer> _keys;
-    private Dictionary<char, KeyRenderer> Keys
-    {
-        get
-        {
-            if (_keys == null)
-                _keys = new Dictionary<char, KeyRenderer>();
-            return _keys;
-        }
-    }
+    private Dictionary<char, KeyRenderer> Keys => _keys ??= new Dictionary<char, KeyRenderer>();
 
+    private KnowledgeManager _knowledge;
     private void InitalizeKeyRenderer(KeyRenderer key, char c)
     {
         Keys.Add(c,key);
@@ -41,13 +36,12 @@ public class InputManager : BaseManager
                 break;
         }
     }
-    public override IEnumerator Initialize()
-    {
+
+    private void Awake() {
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
         InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Delete), Command.Delete);
         InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Enter), Command.Enter);
-        yield break;
     }
 
     public bool HasInput => _currentInput.InputType != PlayerInput.Type.None;
@@ -73,11 +67,6 @@ public class InputManager : BaseManager
         _currentInput = PlayerInput.Enter();
     }
 
-    private void NewGame()
-    {
-        _currentInput = PlayerInput.NewGame();
-    }
-
     private void OnGUI()
     {
         var e = Event.current;
@@ -100,16 +89,29 @@ public class InputManager : BaseManager
         }
     }
 
-    public void UpdateKnowledge(KnowledgeManager knowledge)
-    {
-        foreach (var c in Language.Alphabet)
-        {
+    public override void ResetManager() {
+        var knowledge = GetComponent<KnowledgeManager>();
+        foreach (var c in Language.Alphabet) {
             var k = knowledge.GlobalKnowledge(c);
             Keys[c].Knowledge = k;
         }
     }
 
-    public override void ResetManager()
-    {
+   public void Handle(KnowledgeInitialized update) {
+        _knowledge = update.Knowledge;
+    }
+
+    public void Handle(GuessAnnotated update) {
+        foreach (var c in Language.Alphabet) {
+            var k = _knowledge.GlobalKnowledge(c);
+            Keys[c].Knowledge = k;
+        }
+    }
+
+    public void Handle(NewAnswer update) {
+        foreach (var c in Language.Alphabet) {
+            var k = _knowledge.GlobalKnowledge(c);
+            Keys[c].Knowledge = k;
+        }
     }
 }

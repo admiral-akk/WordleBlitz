@@ -1,6 +1,4 @@
-﻿
-
-    public readonly struct PlayerInput
+﻿public class PlayerInput : BaseUpdate<PlayerInput>
 {
     public enum Type
     {
@@ -8,7 +6,6 @@
         Enter,
         Delete,
         HitKey,
-        NewGame,
     }
 
     public readonly char Letter;
@@ -18,6 +15,10 @@
     {
         InputType = type;
         Letter = c;
+    }
+
+    public PlayerInput() {
+        InputType = Type.None;
     }
 
     public static PlayerInput Enter()
@@ -33,9 +34,5 @@
     public static PlayerInput HitKey(char c)
     {
         return new PlayerInput(Type.HitKey, c);
-    }
-    public static PlayerInput NewGame()
-    {
-        return new PlayerInput(Type.NewGame);
     }
 }
