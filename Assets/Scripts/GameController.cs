@@ -96,7 +96,6 @@ public class GameController : MonoBehaviour,
     }
 
     public void Handle(GuessAnnotated update) {
-        Timer.GuessSubmitted(update.AnnotatedGuess);
         History.GuessSubmitted(update.AnnotatedGuess);
         if (update.AnswerIndex >= 0)
             Score.HandleCorrectGuess(update.AnnotatedGuess, update.AnswerIndex);

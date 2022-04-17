@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerManager : NewBaseManager<TimeData, TimeUpdate>
+public class TimerManager : NewBaseManager<TimeData, TimeUpdate>, IUpdateObserver<GuessAnnotated>
 {
     private enum State
     {
@@ -35,14 +34,6 @@ public class TimerManager : NewBaseManager<TimeData, TimeUpdate>
             return;
         UpdateData(Data.Increment(Time.fixedDeltaTime));
     }
-
-    // Should be a "game started" listener.
-    public void GuessSubmitted(AnnotatedWord guess)
-    {
-        if (guess.Word == "BLITZ")
-            S = State.Started;
-    }
-
     public void GameOver() {
         S = State.Paused;
     }
@@ -52,5 +43,11 @@ public class TimerManager : NewBaseManager<TimeData, TimeUpdate>
         S = State.Paused;
         UpdateData(Data.Reset());
     }
+
+    public void Handle(GuessAnnotated update) {
+        if (update.AnnotatedGuess.Word == "BLITZ")
+            S = State.Started;
+    }
+
     public float TimeLeft => Data.Time;
 }
