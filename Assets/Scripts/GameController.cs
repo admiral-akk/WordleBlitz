@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour, 
     IUpdateObserver<AnswerGeneratorInitialized>, 
     IUpdateObserver<ValidLexiconInitialized>,
-    IUpdateObserver<GuessEntered> {
+    IUpdateObserver<GuessAnnotated> {
     #region Managers
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
@@ -95,15 +95,12 @@ public class GameController : MonoBehaviour,
         dictionariesInitialized++;
     }
 
-    public void Handle(GuessEntered update) {
-        var guess = update.Guess;
-        Knowledge.UpdateKnowledge(guess);
-        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess);
-        Timer.GuessSubmitted(annotatedGuess);
-        History.GuessSubmitted(annotatedGuess);
-        if (answerIndex >= 0)
-            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
-        if (Knowledge.Correct(guess)) {
+    public void Handle(GuessAnnotated update) {
+        Timer.GuessSubmitted(update.AnnotatedGuess);
+        History.GuessSubmitted(update.AnnotatedGuess);
+        if (update.AnswerIndex >= 0)
+            Score.HandleCorrectGuess(update.AnnotatedGuess, update.AnswerIndex);
+        if (Knowledge.Correct(update.AnnotatedGuess.Word)) {
             Knowledge.NewProblem();
         }
         Input.UpdateKnowledge(Knowledge);

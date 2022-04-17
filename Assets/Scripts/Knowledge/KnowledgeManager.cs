@@ -4,8 +4,17 @@ using System.Linq;
 using UnityEngine;
 using static CharacterKnowledge;
 
-public class KnowledgeManager : BaseManager, IUpdateObserver<AnswerGeneratorInitialized>
-{
+public class GuessAnnotated : BaseUpdate<GuessAnnotated> {
+    public AnnotatedWord AnnotatedGuess;
+    public int AnswerIndex;
+    public GuessAnnotated(AnnotatedWord annotatedGuess, int answerIndex) {
+        AnnotatedGuess = annotatedGuess;
+        AnswerIndex = answerIndex;
+    }
+}
+public class KnowledgeManager : BaseManager, 
+    IUpdateObserver<AnswerGeneratorInitialized>,
+    IUpdateObserver<GuessEntered> {
     [SerializeField] private int WordLength;
     [SerializeField] private int DailyAnswerCount;
 
@@ -123,6 +132,12 @@ public class KnowledgeManager : BaseManager, IUpdateObserver<AnswerGeneratorInit
     public void Handle(AnswerGeneratorInitialized update) {
         _answerGenerator = update.Generator;
         GenerateDailyAnswers();
+    }
+
+    public void Handle(GuessEntered update) {
+        UpdateKnowledge(update.Guess);
+        var (answerIndex, annotatedGuess) = Annotate(update.Guess);
+        new GuessAnnotated(annotatedGuess, answerIndex).Emit(gameObject);
     }
 
     public List<Tuple<Word, int>> GuessesRequired
