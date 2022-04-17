@@ -2,9 +2,10 @@
 using UnityEngine;
 
 public class GameController : MonoBehaviour, 
-    IUpdateObserver<PlayerInput>, 
     IUpdateObserver<AnswerGeneratorInitialized>, 
-    IUpdateObserver<ValidLexiconInitialized> {
+    IUpdateObserver<ValidLexiconInitialized>,
+    IUpdateObserver<GuessEntered>,
+    IUpdateObserver<GuessError> {
     #region Managers
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
@@ -85,28 +86,6 @@ public class GameController : MonoBehaviour,
         return;
     }
 
-    public void Handle(PlayerInput update) {
-
-        if (Knowledge.IsGameOver) 
-            return;
-        var guess = Guess.HandleInput(update);
-        if (guess.S == GuessResult.State.None)
-            return;
-        Prompt.HandleError(guess.S);
-        if (guess.S != GuessResult.State.Valid)
-            return;
-        Knowledge.UpdateKnowledge(guess.Guess);
-        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
-        Timer.GuessSubmitted(annotatedGuess);
-        History.GuessSubmitted(annotatedGuess);
-        if (answerIndex >= 0)
-            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
-        if (Knowledge.Correct(guess.Guess)) {
-            Knowledge.NewProblem();
-        }
-        Input.UpdateKnowledge(Knowledge);
-    }
-
     private int dictionariesInitialized = 0;
 
     public void Handle(AnswerGeneratorInitialized update) {
@@ -115,5 +94,38 @@ public class GameController : MonoBehaviour,
 
     public void Handle(ValidLexiconInitialized update) {
         dictionariesInitialized++;
+    }
+
+    public void Handle(GuessEntered update) {
+        var guess = update.Guess;
+        Knowledge.UpdateKnowledge(guess);
+        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess);
+        Timer.GuessSubmitted(annotatedGuess);
+        History.GuessSubmitted(annotatedGuess);
+        if (answerIndex >= 0)
+            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
+        if (Knowledge.Correct(guess)) {
+            Knowledge.NewProblem();
+        }
+        Input.UpdateKnowledge(Knowledge);
+    }
+
+    public void Handle(GuessError update) {
+        switch (update.Type) {
+            case GuessError.ErrorType.None:
+                break;
+            case GuessError.ErrorType.TooShort:
+                Prompt.HandleError(GuessResult.State.TooShort);
+                break;
+            case GuessError.ErrorType.InvalidWord:
+                Prompt.HandleError(GuessResult.State.InvalidWord);
+                break;
+            case GuessError.ErrorType.ReusedWord:
+                Prompt.HandleError(GuessResult.State.ReusedWord);
+                break;
+            case GuessError.ErrorType.NonBlitz:
+                Prompt.HandleError(GuessResult.State.NonBlitz);
+                break;
+        }
     }
 }

@@ -10,17 +10,17 @@ public class GuessEntered : BaseUpdate<GuessEntered> {
 }
 
 public class GuessError : BaseUpdate<GuessError> {
-    public enum Type {
+    public enum ErrorType {
         None,
         TooShort,
         InvalidWord,
         ReusedWord,
         NonBlitz,
     }
-        public Type _type;
+    public ErrorType Type;
 
-    public GuessError(Type type) {
-        _type = type;
+    public GuessError(ErrorType type) {
+        Type = type;
     }
 }
 public class GuessData : NewBaseData<GuessEntered> {
@@ -108,6 +108,38 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
     public void Handle(ValidLexiconInitialized update) => _wordValidator = update.Validator;
 
     public void Handle(PlayerInput update) {
-        return;
+        switch (update.InputType) {
+            case PlayerInput.Type.None:
+                break;
+            case PlayerInput.Type.Enter:
+                if (!UsedWords.Contains("BLITZ") && Guess != "BLITZ") {
+                    new GuessError(GuessError.ErrorType.NonBlitz).Emit(gameObject);
+                    return;
+                }
+                if (Guess.Length < _knowledge.Length) {
+                      new GuessError(GuessError.ErrorType.TooShort).Emit(gameObject);
+                    return;
+                }
+                if (!_wordValidator.Valid(Guess)) {
+                    new GuessError(GuessError.ErrorType.InvalidWord).Emit(gameObject);
+                    return;
+                }
+                if (UsedWords.Contains(Guess)) {
+                     new GuessError(GuessError.ErrorType.ReusedWord).Emit(gameObject);
+                    return;
+                }
+                var guess = Guess;
+                _usedWords.Add(guess);
+                Guess = "";
+                new GuessEntered(guess).Emit(gameObject);
+                return;
+            case PlayerInput.Type.Delete:
+                Guess = Guess.RemoveEnd();
+                break;
+            case PlayerInput.Type.HitKey:
+                if (Guess.Length < _knowledge.Length)
+                    Guess += update.Letter;
+                break;
+        }
     }
 }
