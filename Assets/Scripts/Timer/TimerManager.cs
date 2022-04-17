@@ -1,46 +1,25 @@
-using System.Collections;
 using UnityEngine;
-
-public class TimeUpdate : BaseUpdate<TimeUpdate> {
-    public float Time;
-    public TimeUpdate(float time) {
-        Time = time;
-    }
-}
-public class TimerManager : MonoBehaviour, 
+public class TimerManager : RendererManager<float>,
     IUpdateObserver<GuessAnnotated>,
-    IUpdateObserver<GameOver>
-{
-    private enum State
-    {
+    IUpdateObserver<GameOver> {
+    private enum State {
         None,
         Paused,
         Started,
     }
 
-    private State S
-    {
-        get;
-        set;
-    }
+    private State S;
 
-    private float _timeSpent;
-    public float TimeSpent {
-        get => _timeSpent;
-        private set {
-            _timeSpent = value;
-            new TimeUpdate(_timeSpent).Emit(gameObject);
-        }
-    }
+    public float TimeSpent { get; private set; }
 
-    public void Awake()
-    {
+    protected override float Data => TimeSpent;
+
+    public void Awake() {
         S = State.None;
         TimeSpent = 0;
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (S != State.Started)
             return;
         TimeSpent += Time.fixedDeltaTime;
