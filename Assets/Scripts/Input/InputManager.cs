@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static CommandKeyRenderer;
 
-public class InputManager : BaseManager, IUpdateObserver<KnowledgeInitialized>, IUpdateObserver<GuessAnnotated>
+public class InputManager : BaseManager, 
+    IUpdateObserver<KnowledgeInitialized>, 
+    IUpdateObserver<GuessAnnotated>,
+    IUpdateObserver<NewAnswer>
 {
     [SerializeField] private KeyboardRenderer Keyboard;
 
@@ -104,6 +107,13 @@ public class InputManager : BaseManager, IUpdateObserver<KnowledgeInitialized>, 
     }
 
     public void Handle(GuessAnnotated update) {
+        foreach (var c in Language.Alphabet) {
+            var k = _knowledge.GlobalKnowledge(c);
+            Keys[c].Knowledge = k;
+        }
+    }
+
+    public void Handle(NewAnswer update) {
         foreach (var c in Language.Alphabet) {
             var k = _knowledge.GlobalKnowledge(c);
             Keys[c].Knowledge = k;

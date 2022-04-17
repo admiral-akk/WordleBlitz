@@ -21,6 +21,8 @@ public class GuessAnnotated : BaseUpdate<GuessAnnotated> {
     }
 }
 
+public class NewAnswer : BaseUpdate<NewAnswer> { }
+
 public class GameOver : BaseUpdate<GameOver> {
     public GameOver() { }
 }
@@ -132,6 +134,7 @@ public class KnowledgeManager : BaseManager,
         }
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
+        new NewAnswer().Emit(gameObject);
     }
 
     public Word SpoilAnswer()
