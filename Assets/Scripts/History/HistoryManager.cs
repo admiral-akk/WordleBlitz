@@ -2,22 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class HistoryManager : BaseManager
+public class HistoryManager : BaseManager, IUpdateObserver<GuessAnnotated>
 {
     [SerializeField] private HistoryRenderer Renderer;
 
     private List<AnnotatedWord> _guesses;
-    private List<AnnotatedWord> Guesses
-    {
-        get
-        {
-            if (_guesses == null)
-                _guesses = new List<AnnotatedWord>();
-            return _guesses;
-        }
-    }
+    private List<AnnotatedWord> Guesses =>_guesses ??= new List<AnnotatedWord>();
     public void GuessSubmitted(AnnotatedWord guess)
     {
         Guesses.Add(guess);
@@ -47,5 +38,10 @@ public class HistoryManager : BaseManager
     {
         Guesses.Clear();
         Renderer.Clear();
+    }
+
+    public void Handle(GuessAnnotated update) {
+        Guesses.Add(update.AnnotatedGuess);
+        Renderer.RenderGuess(update.AnnotatedGuess);
     }
 }

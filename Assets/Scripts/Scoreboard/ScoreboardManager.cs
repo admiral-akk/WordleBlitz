@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreboardManager : BaseManager
+public class ScoreboardManager : BaseManager, IUpdateObserver<GuessAnnotated>
 {
     [SerializeField] private ScoreboardRenderer Renderer;
 
@@ -15,6 +15,13 @@ public class ScoreboardManager : BaseManager
                 _correct.Add("");
             Renderer.Render(_correct);
         }
+    }
+
+    public void Handle(GuessAnnotated update) {
+        if (update.AnswerIndex == -1)
+            return;
+        _correct[update.AnswerIndex] = update.AnnotatedGuess.Word;
+        Renderer.Render(_correct);
     }
 
     public void HandleCorrectGuess(AnnotatedWord correctWord, int index)
