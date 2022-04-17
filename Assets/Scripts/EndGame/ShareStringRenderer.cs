@@ -17,7 +17,7 @@ public class ShareStringRenderer : MonoBehaviour
 
     private string _renderedGuesses;
 
-    public void Initialize()
+    public void Awake()
     {
         Share.onClick.AddListener(CopyGuessesToClipboard);
     }

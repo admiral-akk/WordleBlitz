@@ -4,6 +4,14 @@ using System.Linq;
 using UnityEngine;
 using static CharacterKnowledge;
 
+public class KnowledgeInitialized : BaseUpdate<KnowledgeInitialized> {
+    public KnowledgeManager Knowledge;
+
+    public KnowledgeInitialized(KnowledgeManager knowledge) {
+        Knowledge = knowledge;
+    }
+}
+
 public class GuessAnnotated : BaseUpdate<GuessAnnotated> {
     public AnnotatedWord AnnotatedGuess;
     public int AnswerIndex;
@@ -12,6 +20,11 @@ public class GuessAnnotated : BaseUpdate<GuessAnnotated> {
         AnswerIndex = answerIndex;
     }
 }
+
+public class GameOver : BaseUpdate<GameOver> {
+    public GameOver() { }
+}
+
 public class KnowledgeManager : BaseManager, 
     IUpdateObserver<AnswerGeneratorInitialized>,
     IUpdateObserver<GuessEntered> {
@@ -113,8 +126,10 @@ public class KnowledgeManager : BaseManager,
     public void NewProblem()
     {
         DailyAnswers.RemoveAt(0);
-        if (IsGameOver)
+        if (DailyAnswers.Count == 0) {
+            new GameOver().Emit(gameObject);
             return;
+        }
         GuessKnowledge.SetAnswer(DailyAnswers[0]);
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
     }
@@ -132,15 +147,16 @@ public class KnowledgeManager : BaseManager,
     public void Handle(AnswerGeneratorInitialized update) {
         _answerGenerator = update.Generator;
         GenerateDailyAnswers();
+        new KnowledgeInitialized(this).Emit(gameObject);
     }
 
     public void Handle(GuessEntered update) {
         UpdateKnowledge(update.Guess);
         var (answerIndex, annotatedGuess) = Annotate(update.Guess);
+        new GuessAnnotated(annotatedGuess, answerIndex).Emit(gameObject);
         if (Correct(update.Guess)) {
             NewProblem();
         }
-        new GuessAnnotated(annotatedGuess, answerIndex).Emit(gameObject);
     }
 
     public List<Tuple<Word, int>> GuessesRequired
@@ -160,5 +176,4 @@ public class KnowledgeManager : BaseManager,
 
 
     public int AnswerCount => DailyAnswerCount;
-    public bool IsGameOver => DailyAnswers.Count == 0;
 }

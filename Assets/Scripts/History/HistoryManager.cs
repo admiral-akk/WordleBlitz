@@ -15,10 +15,9 @@ public class HistoryManager : BaseManager, IUpdateObserver<GuessAnnotated>
         Renderer.RenderGuess(guess);
     }
 
-    public override IEnumerator Initialize()
+    public void Awake()
     {
         ResetManager();
-        yield break;
     }
 
     public List<Word> GetCorrectGuesses()

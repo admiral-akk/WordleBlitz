@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class EndGameManager : BaseManager
+public class EndGameManager : BaseManager, IUpdateObserver<GameOver>
 {
     [SerializeField] private Canvas EndScreen;
     [SerializeField] private TextMeshProUGUI Words;
@@ -34,28 +32,27 @@ public class EndGameManager : BaseManager
         }
     }
 
-    public override IEnumerator Initialize()
+    private void Awake()
     {
         S = State.InProgress;
-        Share.Initialize();
-        yield break;
-    }
-
-    public void GameOver(float timeTaken, List<Tuple<Word, int>> guessesRequired, List<AnnotatedWord> history)
-    {
-        var time = TimeSpan.FromSeconds(timeTaken);
-        Share.RenderGuesses(time, history, guessesRequired);
-        Score.text = string.Format("Time: {0}:{1:00.}", time.Minutes, time.Seconds);
-        Words.text = "";
-        foreach (var (word, count) in guessesRequired)
-        {
-            Words.text += string.Format("{0}: {1}\n", word, count);
-        }
-        S = State.GameOver;
     }
 
     public override void ResetManager()
     {
         S = State.InProgress;
+    }
+
+    public void Handle(GameOver update) {
+        var guessesRequired = GetComponent<KnowledgeManager>().GuessesRequired;
+        var history = GetComponent<HistoryManager>().GetHistory();
+        var time = TimeSpan.FromSeconds(GetComponent<TimerManager>().TimeLeft);
+
+        Share.RenderGuesses(time, history, guessesRequired);
+        Score.text = string.Format("Time: {0}:{1:00.}", time.Minutes, time.Seconds);
+        Words.text = "";
+        foreach (var (word, count) in guessesRequired) {
+            Words.text += string.Format("{0}: {1}\n", word, count);
+        }
+        S = State.GameOver;
     }
 }

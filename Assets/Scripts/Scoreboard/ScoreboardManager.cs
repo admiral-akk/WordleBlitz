@@ -1,8 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreboardManager : BaseManager, IUpdateObserver<GuessAnnotated>
+public class ScoreboardManager : BaseManager, 
+    IUpdateObserver<GuessAnnotated>,
+    IUpdateObserver<KnowledgeInitialized>
 {
     [SerializeField] private ScoreboardRenderer Renderer;
 
@@ -29,16 +30,13 @@ public class ScoreboardManager : BaseManager, IUpdateObserver<GuessAnnotated>
         _correct[index] = correctWord.Word;
         Renderer.Render(_correct);
     }
-
-
-    public void RegisterKnowledge(KnowledgeManager knowledge)
-    {
-        AnswersCount = knowledge.AnswerCount;
-    }
-
     public override void ResetManager()
     {
         _correct.Clear();
         Renderer.Render(_correct);
+    }
+
+    public void Handle(KnowledgeInitialized update) {
+        AnswersCount = update.Knowledge.AnswerCount; 
     }
 }

@@ -33,19 +33,18 @@ public class GuessData : NewBaseData<GuessEntered> {
 }
 
 public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
-    IUpdateObserver<ValidLexiconInitialized>, 
-    IUpdateObserver<PlayerInput> {
+    IUpdateObserver<ValidLexiconInitialized>,
+    IUpdateObserver<PlayerInput>,
+    IUpdateObserver<KnowledgeInitialized> {
     [SerializeField] private GuessRenderer Renderer;
 
     private IWordValidator _wordValidator;
     private KnowledgeManager _knowledge;
 
     private Word _guess;
-    private Word Guess
-    {
+    private Word Guess {
         get => _guess;
-        set
-        {
+        set {
             _guess = value;
             if (_knowledge != null)
                 Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
@@ -59,10 +58,8 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
     protected override GuessData Data {
         get => _data ??= new GuessData();
     }
-    public GuessResult HandleInput(PlayerInput input)
-    {
-        switch (input.InputType)
-        {
+    public GuessResult HandleInput(PlayerInput input) {
+        switch (input.InputType) {
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
@@ -89,23 +86,14 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
         return new GuessResult(GuessResult.State.None);
     }
 
-    public void RegisterValidator(IWordValidator wordValidator) {
-        _wordValidator = wordValidator;
+    public override void ResetManager() {
         Guess = "";
     }
 
-    public void RegisterKnowledge(KnowledgeManager knowledge)
-    {
-        _knowledge = knowledge;
+    public void Handle(ValidLexiconInitialized update) {
+        _wordValidator = update.Validator;
         Guess = "";
     }
-
-    public override void ResetManager()
-    {
-        Guess = "";
-    }
-
-    public void Handle(ValidLexiconInitialized update) => _wordValidator = update.Validator;
 
     public void Handle(PlayerInput update) {
         switch (update.InputType) {
@@ -117,7 +105,7 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
                     return;
                 }
                 if (Guess.Length < _knowledge.Length) {
-                      new GuessError(GuessError.ErrorType.TooShort).Emit(gameObject);
+                    new GuessError(GuessError.ErrorType.TooShort).Emit(gameObject);
                     return;
                 }
                 if (!_wordValidator.Valid(Guess)) {
@@ -125,7 +113,7 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
                     return;
                 }
                 if (UsedWords.Contains(Guess)) {
-                     new GuessError(GuessError.ErrorType.ReusedWord).Emit(gameObject);
+                    new GuessError(GuessError.ErrorType.ReusedWord).Emit(gameObject);
                     return;
                 }
                 var guess = Guess;
@@ -141,5 +129,10 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
                     Guess += update.Letter;
                 break;
         }
+    }
+
+    public void Handle(KnowledgeInitialized update) {
+        _knowledge = update.Knowledge;
+        Guess = "";
     }
 }
