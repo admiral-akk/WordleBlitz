@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class EndGameManager : BaseManager, IUpdateObserver<GameOver>
+public class EndGameManager : MonoBehaviour, IUpdateObserver<GameOver>
 {
     [SerializeField] private Canvas EndScreen;
     [SerializeField] private TextMeshProUGUI Words;
@@ -33,11 +33,6 @@ public class EndGameManager : BaseManager, IUpdateObserver<GameOver>
     }
 
     private void Awake()
-    {
-        S = State.InProgress;
-    }
-
-    public override void ResetManager()
     {
         S = State.InProgress;
     }

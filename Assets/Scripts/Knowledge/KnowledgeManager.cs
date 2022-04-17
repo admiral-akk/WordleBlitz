@@ -27,7 +27,7 @@ public class GameOver : BaseUpdate<GameOver> {
     public GameOver() { }
 }
 
-public class KnowledgeManager : BaseManager, 
+public class KnowledgeManager : MonoBehaviour, 
     IUpdateObserver<AnswerGeneratorInitialized>,
     IUpdateObserver<GuessEntered> {
     [SerializeField] private int WordLength;
@@ -140,11 +140,6 @@ public class KnowledgeManager : BaseManager,
     public Word SpoilAnswer()
     {
         return Answer.Value;
-    }
-
-    public override void ResetManager()
-    {
-        GenerateDailyAnswers();
     }
 
     public void Handle(AnswerGeneratorInitialized update) {

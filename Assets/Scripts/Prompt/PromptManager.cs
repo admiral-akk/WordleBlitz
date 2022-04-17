@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PromptManager : BaseManager, IUpdateObserver<GuessError> {
+public class PromptManager : MonoBehaviour, IUpdateObserver<GuessError> {
     [SerializeField] private PromptRenderer Renderer;
 
     public void Handle(GuessError update) {

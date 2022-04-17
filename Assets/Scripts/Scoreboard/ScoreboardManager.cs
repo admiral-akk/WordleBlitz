@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreboardManager : BaseManager, 
+public class ScoreboardManager : MonoBehaviour,
     IUpdateObserver<GuessAnnotated>,
-    IUpdateObserver<KnowledgeInitialized>
-{
+    IUpdateObserver<KnowledgeInitialized> {
     [SerializeField] private ScoreboardRenderer Renderer;
 
     private List<Word> _correct;
-    private int AnswersCount
-    {
+    private int AnswersCount {
         set {
             _correct = new List<Word>();
             while (value-- > 0)
@@ -25,18 +23,12 @@ public class ScoreboardManager : BaseManager,
         Renderer.Render(_correct);
     }
 
-    public void HandleCorrectGuess(AnnotatedWord correctWord, int index)
-    {
+    public void HandleCorrectGuess(AnnotatedWord correctWord, int index) {
         _correct[index] = correctWord.Word;
-        Renderer.Render(_correct);
-    }
-    public override void ResetManager()
-    {
-        _correct.Clear();
         Renderer.Render(_correct);
     }
 
     public void Handle(KnowledgeInitialized update) {
-        AnswersCount = update.Knowledge.AnswerCount; 
+        AnswersCount = update.Knowledge.AnswerCount;
     }
 }
