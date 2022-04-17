@@ -23,16 +23,9 @@ public class GuessError : BaseUpdate<GuessError> {
         Type = type;
     }
 }
-public class GuessData : NewBaseData<GuessEntered> {
 
-    private List<Word> _guesses;
-    public List<Word> PreviousGuesses => _guesses ??= new List<Word>();
-    public override void Handle(GuessEntered update) {
-        PreviousGuesses.Add(update.Guess);
-    }
-}
-
-public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
+public class GuessManager : MonoBehaviour,
+    IUpdateObserver<GuessEntered>,
     IUpdateObserver<ValidLexiconInitialized>,
     IUpdateObserver<PlayerInput>,
     IUpdateObserver<KnowledgeInitialized> {
@@ -40,6 +33,8 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
 
     private IWordValidator _wordValidator;
     private KnowledgeManager _knowledge;
+    private List<Word> _guesses;
+    public List<Word> Guesses => _guesses ??= new List<Word>();
 
     private Word _guess;
     private Word Guess {
@@ -53,47 +48,6 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
 
     private HashSet<Word> _usedWords;
     private HashSet<Word> UsedWords => _usedWords ??= new HashSet<Word>();
-
-    private GuessData _data;
-    protected override GuessData Data {
-        get => _data ??= new GuessData();
-    }
-    public GuessResult HandleInput(PlayerInput input) {
-        switch (input.InputType) {
-            case PlayerInput.Type.None:
-                break;
-            case PlayerInput.Type.Enter:
-                if (!UsedWords.Contains("BLITZ") && Guess != "BLITZ")
-                    return new GuessResult(Guess, GuessResult.State.NonBlitz);
-                if (Guess.Length < _knowledge.Length)
-                    return new GuessResult(Guess, GuessResult.State.TooShort);
-                if (!_wordValidator.Valid(Guess))
-                    return new GuessResult(Guess, GuessResult.State.InvalidWord);
-                if (UsedWords.Contains(Guess))
-                    return new GuessResult(Guess, GuessResult.State.ReusedWord);
-                var guess = Guess;
-                _usedWords.Add(guess);
-                Guess = "";
-                return new GuessResult(guess, GuessResult.State.Valid);
-            case PlayerInput.Type.Delete:
-                Guess = Guess.RemoveEnd();
-                break;
-            case PlayerInput.Type.HitKey:
-                if (Guess.Length < _knowledge.Length)
-                    Guess += input.Letter;
-                break;
-        }
-        return new GuessResult(GuessResult.State.None);
-    }
-
-    public override void ResetManager() {
-        Guess = "";
-    }
-
-    public void Handle(ValidLexiconInitialized update) {
-        _wordValidator = update.Validator;
-        Guess = "";
-    }
 
     public void Handle(PlayerInput update) {
         switch (update.InputType) {
@@ -131,8 +85,19 @@ public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
         }
     }
 
+    #region Observers
     public void Handle(KnowledgeInitialized update) {
         _knowledge = update.Knowledge;
         Guess = "";
     }
+
+    public void Handle(ValidLexiconInitialized update) {
+        _wordValidator = update.Validator;
+        Guess = "";
+    }
+
+    public void Handle(GuessEntered update) {
+        Guesses.Add(update.Guess);
+    }
+    #endregion
 }

@@ -36,17 +36,12 @@ public class InputManager : BaseManager,
                 break;
         }
     }
-    public override IEnumerator Initialize()
-    {
+
+    private void Awake() {
         foreach (char c in Language.Alphabet)
             InitalizeKeyRenderer(Keyboard.AddKey(c), c);
         InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Delete), Command.Delete);
         InitalizeCommandKeyRenderer(Keyboard.AddCommand(Command.Enter), Command.Enter);
-        yield break;
-    }
-
-    private void Awake() {
-        StartCoroutine(Initialize());
     }
 
     public bool HasInput => _currentInput.InputType != PlayerInput.Type.None;

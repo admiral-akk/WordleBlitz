@@ -45,7 +45,7 @@ public class EndGameManager : BaseManager, IUpdateObserver<GameOver>
     public void Handle(GameOver update) {
         var guessesRequired = GetComponent<KnowledgeManager>().GuessesRequired;
         var history = GetComponent<HistoryManager>().GetHistory();
-        var time = TimeSpan.FromSeconds(GetComponent<TimerManager>().TimeLeft);
+        var time = TimeSpan.FromSeconds(GetComponent<TimerManager>().TimeSpent);
 
         Share.RenderGuesses(time, history, guessesRequired);
         Score.text = string.Format("Time: {0}:{1:00.}", time.Minutes, time.Seconds);

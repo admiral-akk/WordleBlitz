@@ -7,3 +7,7 @@ public class BaseUpdate<UpdateType> where UpdateType : BaseUpdate<UpdateType> {
             observer.Handle((UpdateType)this);
     }
 }
+public interface IUpdateObserver<UpdateType> where UpdateType : BaseUpdate<UpdateType> {
+    // TODO: should change this to only handle data of update, so that we don't accidently re-emit it.
+    public void Handle(UpdateType update);
+}

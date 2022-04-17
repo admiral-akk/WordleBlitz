@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public abstract class DictionaryManager<LexiconUpdateType> : BaseUpdateProducer<LexiconUpdateType> 
+public abstract class DictionaryManager<LexiconUpdateType> : MonoBehaviour 
     where LexiconUpdateType : BaseUpdate<LexiconUpdateType> {
     [SerializeField] private string FileName;
 
@@ -15,7 +15,7 @@ public abstract class DictionaryManager<LexiconUpdateType> : BaseUpdateProducer<
     protected IEnumerator ReadLexiconFile() {
         var temp = new List<WordDictionary>();
         yield return FillWordCollection(FilePath, temp);
-        Emit(GenerateLexicon(temp));
+        GenerateLexicon(temp).Emit(gameObject);
     }
     private static void AddWord(Word word, List<WordDictionary> collection)
     {

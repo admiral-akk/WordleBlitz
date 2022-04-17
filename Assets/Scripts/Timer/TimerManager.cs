@@ -1,7 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class TimerManager : NewBaseManager<TimeData, TimeUpdate>, 
+public class TimeUpdate : BaseUpdate<TimeUpdate> {
+    public float Time;
+    public TimeUpdate(float time) {
+        Time = time;
+    }
+}
+public class TimerManager : MonoBehaviour, 
     IUpdateObserver<GuessAnnotated>,
     IUpdateObserver<GameOver>
 {
@@ -18,28 +24,26 @@ public class TimerManager : NewBaseManager<TimeData, TimeUpdate>,
         set;
     }
 
-    private TimeData _data;
-    protected override TimeData Data {
-        get => _data ??= new TimeData();
+    private float _timeSpent;
+    public float TimeSpent {
+        get => _timeSpent;
+        private set {
+            _timeSpent = value;
+            new TimeUpdate(_timeSpent).Emit(gameObject);
+        }
     }
 
     public void Awake()
     {
         S = State.None;
-        UpdateData(Data.Reset());
+        TimeSpent = 0;
     }
 
     private void FixedUpdate()
     {
         if (S != State.Started)
             return;
-        UpdateData(Data.Increment(Time.fixedDeltaTime));
-    }
-
-    public override void ResetManager()
-    {
-        S = State.Paused;
-        UpdateData(Data.Reset());
+        TimeSpent += Time.fixedDeltaTime;
     }
 
     public void Handle(GuessAnnotated update) {
@@ -50,6 +54,4 @@ public class TimerManager : NewBaseManager<TimeData, TimeUpdate>,
     public void Handle(GameOver update) {
         S = State.Paused;
     }
-
-    public float TimeLeft => Data.Time;
 }
