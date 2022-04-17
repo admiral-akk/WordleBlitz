@@ -1,10 +1,9 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static CharacterKnowledge;
 
-public abstract class BaseRenderer : MonoBehaviour
+public abstract class BaseLetterRenderer : MonoBehaviour
 {
     [SerializeField] private Image background;
     [SerializeField] private TextMeshProUGUI text;

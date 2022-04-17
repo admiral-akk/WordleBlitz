@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static CharacterKnowledge;
 
-public class KeyRenderer : BaseRenderer
+public class KeyRenderer : BaseLetterRenderer
 {
     [SerializeField] private Button button;
 

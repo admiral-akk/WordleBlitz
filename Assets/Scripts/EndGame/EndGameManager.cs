@@ -4,24 +4,20 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class EndGameManager : MonoBehaviour, IUpdateObserver<GameOver>
-{
+public class EndGameManager : MonoBehaviour, IUpdateObserver<GameOver> {
     [SerializeField] private Canvas EndScreen;
     [SerializeField] private TextMeshProUGUI Words;
     [SerializeField] private TextMeshProUGUI Score;
     [SerializeField] private ShareStringRenderer Share;
 
-    private enum State
-    {
+    private enum State {
         InProgress,
         GameOver,
     }
 
-    private State S
-    {
+    private State S {
         set {
-            switch (value)
-            {
+            switch (value) {
                 case State.InProgress:
                     EndScreen.gameObject.SetActive(false);
                     break;
@@ -32,8 +28,7 @@ public class EndGameManager : MonoBehaviour, IUpdateObserver<GameOver>
         }
     }
 
-    private void Awake()
-    {
+    private void Awake() {
         S = State.InProgress;
     }
 

@@ -1,6 +1,6 @@
 using static CharacterKnowledge;
 
-public class LetterRenderer : BaseRenderer
+public class LetterRenderer : BaseLetterRenderer
 {
     public void Set(char c, LetterKnowledge k)
     {
