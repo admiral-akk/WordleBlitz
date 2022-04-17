@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using static CharacterKnowledge;
 
-public class KnowledgeManager : BaseManager
+public class KnowledgeManager : BaseManager, IUpdateObserver<AnswerGeneratorInitialized>
 {
     [SerializeField] private int WordLength;
     [SerializeField] private int DailyAnswerCount;
@@ -74,11 +74,6 @@ public class KnowledgeManager : BaseManager
         }
     }
 
-    public void RegisterGenerator(IAnswerGenerator answerGenerator) {
-        _answerGenerator = answerGenerator;
-        GenerateDailyAnswers();
-    }
-
     public void UpdateKnowledge(Word guess)
     {
         if (_guesses.ContainsKey(Answer.Value))
@@ -123,6 +118,11 @@ public class KnowledgeManager : BaseManager
 
     public override void ResetManager()
     {
+        GenerateDailyAnswers();
+    }
+
+    public void Handle(AnswerGeneratorInitialized update) {
+        _answerGenerator = update.Generator;
         GenerateDailyAnswers();
     }
 

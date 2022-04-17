@@ -128,12 +128,10 @@ public class GameController : MonoBehaviour,
     private int dictionariesInitialized = 0;
 
     public void Handle(AnswerGeneratorInitialized update) {
-        Knowledge.RegisterGenerator(update.Generator);
         dictionariesInitialized++;
     }
 
     public void Handle(ValidLexiconInitialized update) {
-        Guess.RegisterValidator(update.Validator);
         dictionariesInitialized++;
     }
 }

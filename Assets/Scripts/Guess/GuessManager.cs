@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuessManager : BaseManager
+public class GuessManager : BaseManager, IUpdateObserver<ValidLexiconInitialized>
 {
     [SerializeField] private GuessRenderer Renderer;
 
@@ -79,4 +78,6 @@ public class GuessManager : BaseManager
     {
         Guess = "";
     }
+
+    public void Handle(ValidLexiconInitialized update) => _wordValidator = update.Validator;
 }
