@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerManager : BaseManager
+public class TimerManager : NewBaseManager<TimeUpdate>
 {
     [SerializeField] private TimerRenderer Renderer;
     [SerializeField, Range(10, 180)] private float GameDuration;
@@ -29,6 +29,11 @@ public class TimerManager : BaseManager
     {
         get;
         set;
+    }
+
+    private TimeData _data;
+    protected override NewBaseData<TimeUpdate> Data {
+        get => _data ??= new TimeData();
     }
 
     public override IEnumerator Initialize()
