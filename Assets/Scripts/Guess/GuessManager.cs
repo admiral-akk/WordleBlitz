@@ -1,8 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuessManager : BaseManager, IUpdateObserver<ValidLexiconInitialized>
-{
+
+public class GuessEntered : BaseUpdate<GuessEntered> {
+    public Word Guess;
+    public GuessEntered(Word guess) {
+        Guess = guess;
+    }
+}
+
+public class GuessError : BaseUpdate<GuessError> {
+    public enum Type {
+        None,
+        TooShort,
+        InvalidWord,
+        ReusedWord,
+        NonBlitz,
+    }
+        public Type _type;
+
+    public GuessError(Type type) {
+        _type = type;
+    }
+}
+public class GuessData : NewBaseData<GuessEntered> {
+
+    private List<Word> _guesses;
+    public List<Word> PreviousGuesses => _guesses ??= new List<Word>();
+    public override void Handle(GuessEntered update) {
+        PreviousGuesses.Add(update.Guess);
+    }
+}
+
+public class GuessManager : NewBaseManager<GuessData, GuessEntered>,
+    IUpdateObserver<ValidLexiconInitialized>, 
+    IUpdateObserver<PlayerInput> {
     [SerializeField] private GuessRenderer Renderer;
 
     private IWordValidator _wordValidator;
@@ -20,19 +52,13 @@ public class GuessManager : BaseManager, IUpdateObserver<ValidLexiconInitialized
         }
     }
 
-
-    private Word _currentAnswer;
-    private Word CurrentAnswer
-    {
-        get => _currentAnswer;
-        set
-        {
-            _currentAnswer = value;
-        }
-    }
-
     private HashSet<Word> _usedWords;
     private HashSet<Word> UsedWords => _usedWords ??= new HashSet<Word>();
+
+    private GuessData _data;
+    protected override GuessData Data {
+        get => _data ??= new GuessData();
+    }
     public GuessResult HandleInput(PlayerInput input)
     {
         switch (input.InputType)
@@ -80,4 +106,8 @@ public class GuessManager : BaseManager, IUpdateObserver<ValidLexiconInitialized
     }
 
     public void Handle(ValidLexiconInitialized update) => _wordValidator = update.Validator;
+
+    public void Handle(PlayerInput update) {
+        return;
+    }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 
-public class TimeUpdate {
+public class TimeUpdate : BaseUpdate<TimeUpdate> {
     public float Time;
     public TimeUpdate(float time) {
         Time = time;

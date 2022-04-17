@@ -15,7 +15,6 @@ public class ScoreboardManager : BaseManager
                 _correct.Add("");
             Renderer.Render(_correct);
         }
-
     }
 
     public void HandleCorrectGuess(AnnotatedWord correctWord, int index)

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-public class ValidLexiconInitialized {
+public class ValidLexiconInitialized : BaseUpdate<ValidLexiconInitialized> {
     public IWordValidator Validator;
     [Pure]
     public ValidLexiconInitialized(IWordValidator validator) {

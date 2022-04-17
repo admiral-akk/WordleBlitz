@@ -4,7 +4,8 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public abstract class DictionaryManager<LexiconUpdateType> : BaseUpdateProducer<LexiconUpdateType> {
+public abstract class DictionaryManager<LexiconUpdateType> : BaseUpdateProducer<LexiconUpdateType> 
+    where LexiconUpdateType : BaseUpdate<LexiconUpdateType> {
     [SerializeField] private string FileName;
 
     private string FilePath => Application.streamingAssetsPath + "/" + FileName;
@@ -58,10 +59,7 @@ public abstract class DictionaryManager<LexiconUpdateType> : BaseUpdateProducer<
         }
     }
 
-    protected override void ProducerAwake() {
+    private void Awake() {
         StartCoroutine(ReadLexiconFile());
     }
-
-    private static string _wordPath = Application.streamingAssetsPath + "/GeneratedWords.txt";
-    private static string _answerPath = Application.streamingAssetsPath + "/GeneratedAnswers.txt";
 }

@@ -1,4 +1,4 @@
-﻿public readonly struct PlayerInput
+﻿public class PlayerInput : BaseUpdate<PlayerInput>
 {
     public enum Type
     {
@@ -15,6 +15,10 @@
     {
         InputType = type;
         Letter = c;
+    }
+
+    public PlayerInput() {
+        InputType = Type.None;
     }
 
     public static PlayerInput Enter()

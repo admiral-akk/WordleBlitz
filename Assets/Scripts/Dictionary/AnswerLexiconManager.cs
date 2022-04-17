@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-public class AnswerGeneratorInitialized {
+public class AnswerGeneratorInitialized : BaseUpdate<AnswerGeneratorInitialized> {
     public IAnswerGenerator Generator;
     public AnswerGeneratorInitialized(IAnswerGenerator generator) {
         Generator = generator;
