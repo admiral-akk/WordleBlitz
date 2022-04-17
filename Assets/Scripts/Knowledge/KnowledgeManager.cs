@@ -137,6 +137,9 @@ public class KnowledgeManager : BaseManager,
     public void Handle(GuessEntered update) {
         UpdateKnowledge(update.Guess);
         var (answerIndex, annotatedGuess) = Annotate(update.Guess);
+        if (Correct(update.Guess)) {
+            NewProblem();
+        }
         new GuessAnnotated(annotatedGuess, answerIndex).Emit(gameObject);
     }
 

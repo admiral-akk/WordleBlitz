@@ -96,11 +96,6 @@ public class GameController : MonoBehaviour,
     }
 
     public void Handle(GuessAnnotated update) {
-        if (update.AnswerIndex >= 0)
-            Score.HandleCorrectGuess(update.AnnotatedGuess, update.AnswerIndex);
-        if (Knowledge.Correct(update.AnnotatedGuess.Word)) {
-            Knowledge.NewProblem();
-        }
         Input.UpdateKnowledge(Knowledge);
     }
 }
