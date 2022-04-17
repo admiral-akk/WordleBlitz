@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static CommandKeyRenderer;
@@ -41,7 +40,7 @@ public class InputManager : MonoBehaviour,
     }
 
     private void HitKey(char c) {
-         PlayerInput.HitKey(c).Emit(gameObject);
+        PlayerInput.HitKey(c).Emit(gameObject);
     }
     private void Delete() {
         PlayerInput.Delete().Emit(gameObject);
