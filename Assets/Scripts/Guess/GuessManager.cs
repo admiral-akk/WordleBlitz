@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GuessManager : BaseManager
 {
     [SerializeField] private GuessRenderer Renderer;
 
-    private DictionaryManager _dictionary;
+    private IWordValidator _wordValidator;
     private KnowledgeManager _knowledge;
 
     private Word _guess;
@@ -15,7 +16,8 @@ public class GuessManager : BaseManager
         set
         {
             _guess = value;
-            Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
+            if (_knowledge != null)
+                Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
         }
     }
 
@@ -29,6 +31,9 @@ public class GuessManager : BaseManager
             _currentAnswer = value;
         }
     }
+
+    private HashSet<Word> _usedWords;
+    private HashSet<Word> UsedWords => _usedWords ??= new HashSet<Word>();
     public GuessResult HandleInput(PlayerInput input)
     {
         switch (input.InputType)
@@ -36,15 +41,16 @@ public class GuessManager : BaseManager
             case PlayerInput.Type.None:
                 break;
             case PlayerInput.Type.Enter:
-                if (!_dictionary.IsUsedWord("BLITZ") && Guess != "BLITZ")
+                if (!UsedWords.Contains("BLITZ") && Guess != "BLITZ")
                     return new GuessResult(Guess, GuessResult.State.NonBlitz);
                 if (Guess.Length < _knowledge.Length)
                     return new GuessResult(Guess, GuessResult.State.TooShort);
-                if (!_dictionary.IsValidWord(Guess))
+                if (!_wordValidator.Valid(Guess))
                     return new GuessResult(Guess, GuessResult.State.InvalidWord);
-                if (_dictionary.IsUsedWord(Guess))
+                if (UsedWords.Contains(Guess))
                     return new GuessResult(Guess, GuessResult.State.ReusedWord);
                 var guess = Guess;
+                _usedWords.Add(guess);
                 Guess = "";
                 return new GuessResult(guess, GuessResult.State.Valid);
             case PlayerInput.Type.Delete:
@@ -58,9 +64,9 @@ public class GuessManager : BaseManager
         return new GuessResult(GuessResult.State.None);
     }
 
-    public void RegisterDictionary(DictionaryManager dictionary)
-    {
-        _dictionary = dictionary;
+    public void RegisterValidator(IWordValidator wordValidator) {
+        _wordValidator = wordValidator;
+        Guess = "";
     }
 
     public void RegisterKnowledge(KnowledgeManager knowledge)

@@ -12,7 +12,7 @@ public class KnowledgeManager : BaseManager
 
     public int Length => WordLength;
 
-    private DictionaryManager _dictionary;
+    private IAnswerGenerator _answerGenerator;
 
     private KeyboardKnowledge _keyboardKnowledge;
     public KeyboardKnowledge KeyboardKnowledge
@@ -65,20 +65,17 @@ public class KnowledgeManager : BaseManager
         KeyboardKnowledge.SetAnswer(DailyAnswers[0]);
         for (var i = 0; i < DailyAnswerCount; i++)
         {
-            var word = _dictionary.GetRandomWord(WordLength);
+            var word = _answerGenerator.GetAnswer(WordLength);
+            while (DailyAnswers.Contains(word))
+                word = _answerGenerator.GetAnswer(WordLength);
             DailyAnswers.Add(word);
             _indices[word] = i;
             _guesses[word] = 0;
         }
     }
-    public override IEnumerator Initialize()
-    {
-        yield break;
-    }
 
-    public void RegisterDictionary(DictionaryManager dictionary)
-    {
-        _dictionary = dictionary;
+    public void RegisterGenerator(IAnswerGenerator answerGenerator) {
+        _answerGenerator = answerGenerator;
         GenerateDailyAnswers();
     }
 

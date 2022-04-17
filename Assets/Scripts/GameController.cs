@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
-{
+public class GameController : MonoBehaviour, 
+    IUpdateObserver<PlayerInput>, 
+    IUpdateObserver<AnswerGeneratorInitialized>, 
+    IUpdateObserver<ValidLexiconInitialized> {
     #region Managers
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
-    [SerializeField] private DictionaryManager Dictionary;
     [SerializeField] private HistoryManager History;
     [SerializeField] private KnowledgeManager Knowledge;
     [SerializeField] private TimerManager Timer;
@@ -35,7 +36,6 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
         _waitingOnManagers = 1;
         yield return InitializeManager(Input);
         yield return InitializeManager(Guess);
-        yield return InitializeManager(Dictionary);
         yield return InitializeManager(History);
         yield return InitializeManager(Knowledge);
         yield return InitializeManager(Timer);
@@ -53,7 +53,6 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
         _waitingOnManagers = 1;
         Guess.ResetManager();
         Input.ResetManager();
-        Dictionary.ResetManager();
         History.ResetManager();
         Knowledge.ResetManager();
         Timer.ResetManager();
@@ -67,8 +66,6 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
 
     private void RegisterManagers()
     {
-        Knowledge.RegisterDictionary(Dictionary);
-        Guess.RegisterDictionary(Dictionary);
         Guess.RegisterKnowledge(Knowledge);
         Score.RegisterKnowledge(Knowledge);
         Input.UpdateKnowledge(Knowledge);
@@ -78,7 +75,7 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
 
     private void FixedUpdate()
     {
-        if (!Initialized)
+        if (!Initialized || dictionariesInitialized< 2)
             return;
         var input = Input.GetAndClearInput();
         if (Knowledge.IsGameOver)
@@ -94,7 +91,6 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
         if (guess.S != GuessResult.State.Valid)
             return;
         Knowledge.UpdateKnowledge(guess.Guess);
-        Dictionary.Guess(guess.Guess);
         var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
@@ -118,7 +114,6 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
         if (guess.S != GuessResult.State.Valid)
             return;
         Knowledge.UpdateKnowledge(guess.Guess);
-        Dictionary.Guess(guess.Guess);
         var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
         Timer.GuessSubmitted(annotatedGuess);
         History.GuessSubmitted(annotatedGuess);
@@ -128,5 +123,17 @@ public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
             Knowledge.NewProblem();
         }
         Input.UpdateKnowledge(Knowledge);
+    }
+
+    private int dictionariesInitialized = 0;
+
+    public void Handle(AnswerGeneratorInitialized update) {
+        Knowledge.RegisterGenerator(update.Generator);
+        dictionariesInitialized++;
+    }
+
+    public void Handle(ValidLexiconInitialized update) {
+        Guess.RegisterValidator(update.Validator);
+        dictionariesInitialized++;
     }
 }

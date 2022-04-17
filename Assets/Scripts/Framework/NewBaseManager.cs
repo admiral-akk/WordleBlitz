@@ -16,6 +16,11 @@ public abstract class BaseUpdateProducer<UpdateType> : BaseManager {
         var observers = GetComponents<MonoBehaviour>().OfType<IUpdateObserver<UpdateType>>();
         foreach (var observer in observers)
             Observers.Add(observer);
+        ProducerAwake();
+    }
+
+    protected virtual void ProducerAwake() {
+
     }
 }
 
