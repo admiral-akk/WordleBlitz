@@ -4,8 +4,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour, 
     IUpdateObserver<AnswerGeneratorInitialized>, 
     IUpdateObserver<ValidLexiconInitialized>,
-    IUpdateObserver<GuessEntered>,
-    IUpdateObserver<GuessError> {
+    IUpdateObserver<GuessEntered> {
     #region Managers
     [SerializeField] private InputManager Input;
     [SerializeField] private GuessManager Guess;
@@ -108,24 +107,5 @@ public class GameController : MonoBehaviour,
             Knowledge.NewProblem();
         }
         Input.UpdateKnowledge(Knowledge);
-    }
-
-    public void Handle(GuessError update) {
-        switch (update.Type) {
-            case GuessError.ErrorType.None:
-                break;
-            case GuessError.ErrorType.TooShort:
-                Prompt.HandleError(GuessResult.State.TooShort);
-                break;
-            case GuessError.ErrorType.InvalidWord:
-                Prompt.HandleError(GuessResult.State.InvalidWord);
-                break;
-            case GuessError.ErrorType.ReusedWord:
-                Prompt.HandleError(GuessResult.State.ReusedWord);
-                break;
-            case GuessError.ErrorType.NonBlitz:
-                Prompt.HandleError(GuessResult.State.NonBlitz);
-                break;
-        }
     }
 }
