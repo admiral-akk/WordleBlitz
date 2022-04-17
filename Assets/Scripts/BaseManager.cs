@@ -8,5 +8,5 @@ public abstract class BaseManager : MonoBehaviour
         yield break;
     }
 
-    public abstract void ResetManager();
+    public virtual void ResetManager() { }
 }

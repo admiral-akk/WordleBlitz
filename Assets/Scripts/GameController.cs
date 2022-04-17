@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IUpdateObserver<PlayerInput>
 {
     #region Managers
     [SerializeField] private InputManager Input;
@@ -81,18 +81,12 @@ public class GameController : MonoBehaviour
         if (!Initialized)
             return;
         var input = Input.GetAndClearInput();
-        switch (input.InputType)
-        {
-            case PlayerInput.Type.NewGame:
-                ResetGame();
-                return;
-        }
         if (Knowledge.IsGameOver)
         {
             Timer.GameOver();
             EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired, History.GetHistory());
-            return;
         }
+        return;
         var guess = Guess.HandleInput(input);
         if (guess.S == GuessResult.State.None)
             return;
@@ -108,6 +102,29 @@ public class GameController : MonoBehaviour
             Score.HandleCorrectGuess(annotatedGuess, answerIndex);
         if (Knowledge.Correct(guess.Guess))
         {
+            Knowledge.NewProblem();
+        }
+        Input.UpdateKnowledge(Knowledge);
+    }
+
+    public void Handle(PlayerInput update) {
+
+        if (Knowledge.IsGameOver) 
+            return;
+        var guess = Guess.HandleInput(update);
+        if (guess.S == GuessResult.State.None)
+            return;
+        Prompt.HandleError(guess.S);
+        if (guess.S != GuessResult.State.Valid)
+            return;
+        Knowledge.UpdateKnowledge(guess.Guess);
+        Dictionary.Guess(guess.Guess);
+        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
+        Timer.GuessSubmitted(annotatedGuess);
+        History.GuessSubmitted(annotatedGuess);
+        if (answerIndex >= 0)
+            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
+        if (Knowledge.Correct(guess.Guess)) {
             Knowledge.NewProblem();
         }
         Input.UpdateKnowledge(Knowledge);

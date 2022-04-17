@@ -73,11 +73,6 @@ public class InputManager : BaseManager
         _currentInput = PlayerInput.Enter();
     }
 
-    private void NewGame()
-    {
-        _currentInput = PlayerInput.NewGame();
-    }
-
     private void OnGUI()
     {
         var e = Event.current;
