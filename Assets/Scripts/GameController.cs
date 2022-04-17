@@ -77,30 +77,12 @@ public class GameController : MonoBehaviour,
     {
         if (!Initialized || dictionariesInitialized< 2)
             return;
-        var input = Input.GetAndClearInput();
         if (Knowledge.IsGameOver)
         {
             Timer.GameOver();
             EndGame.GameOver(Timer.TimeLeft, Knowledge.GuessesRequired, History.GetHistory());
         }
         return;
-        var guess = Guess.HandleInput(input);
-        if (guess.S == GuessResult.State.None)
-            return;
-        Prompt.HandleError(guess.S);
-        if (guess.S != GuessResult.State.Valid)
-            return;
-        Knowledge.UpdateKnowledge(guess.Guess);
-        var (answerIndex, annotatedGuess) = Knowledge.Annotate(guess.Guess);
-        Timer.GuessSubmitted(annotatedGuess);
-        History.GuessSubmitted(annotatedGuess);
-        if (answerIndex >= 0)
-            Score.HandleCorrectGuess(annotatedGuess, answerIndex);
-        if (Knowledge.Correct(guess.Guess))
-        {
-            Knowledge.NewProblem();
-        }
-        Input.UpdateKnowledge(Knowledge);
     }
 
     public void Handle(PlayerInput update) {
