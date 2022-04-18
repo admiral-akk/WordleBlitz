@@ -49,7 +49,6 @@ public class ShareStringRenderer : MonoBehaviour {
 
         var currentIndex = 0;
 
-
         foreach (var word in guesses) {
             while (guessed[currentIndex])
                 currentIndex++;

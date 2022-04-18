@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
-
-
 public class GuessEntered : BaseUpdate<GuessEntered> {
     public Word Guess;
     public GuessEntered(Word guess) {
@@ -24,30 +21,52 @@ public class GuessError : BaseUpdate<GuessError> {
     }
 }
 
-public class GuessManager : MonoBehaviour,
+public class GuessData : BaseRenderData<GuessData> {
+
+    private AnnotatedWord _guess;
+    public AnnotatedWord Guess {
+        get => _guess;
+        set {
+            _guess = value;
+            HasUpdate = true;
+        }
+    }
+
+    public int MaxLength { get; set; }
+
+    public GuessData() : base() {
+        Guess = new AnnotatedWord("", new CharacterKnowledge.LetterKnowledge[0]);
+    }
+}
+
+public class GuessManager : RendererManager<GuessData>,
     IUpdateObserver<GuessEntered>,
     IUpdateObserver<ValidLexiconInitialized>,
     IUpdateObserver<PlayerInput>,
     IUpdateObserver<KnowledgeInitialized> {
-    [SerializeField] private GuessRenderer Renderer;
-
     private IWordValidator _wordValidator;
     private KnowledgeManager _knowledge;
-    private List<Word> _guesses;
-    public List<Word> Guesses => _guesses ??= new List<Word>();
-
-    private Word _guess;
     private Word Guess {
-        get => _guess;
+        get => Data.Guess.Word;
         set {
-            _guess = value;
-            if (_knowledge != null)
-                Renderer.UpdateGuess(_knowledge.Annotate(_guess).Item2, _knowledge.Length);
+            if (_knowledge != null) {
+                Data.MaxLength = _knowledge.Length;
+                Data.Guess = _knowledge.Annotate(value).Item2;
+            }
         }
     }
 
     private HashSet<Word> _usedWords;
     private HashSet<Word> UsedWords => _usedWords ??= new HashSet<Word>();
+
+    private GuessData _data;
+    protected override GuessData Data {
+        get {
+            if (_data == null)
+                _data = new GuessData();
+            return _data;
+        }
+    }
 
     public void Handle(PlayerInput update) {
         switch (update.InputType) {
@@ -71,7 +90,6 @@ public class GuessManager : MonoBehaviour,
                     return;
                 }
                 var guess = Guess;
-                _usedWords.Add(guess);
                 Guess = "";
                 new GuessEntered(guess).Emit(gameObject);
                 return;
@@ -97,7 +115,7 @@ public class GuessManager : MonoBehaviour,
     }
 
     public void Handle(GuessEntered update) {
-        Guesses.Add(update.Guess);
+        UsedWords.Add(update.Guess);
     }
     #endregion
 }

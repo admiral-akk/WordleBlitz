@@ -1,11 +1,9 @@
 using UnityEngine;
 
-public class GuessRenderer : MonoBehaviour
-{
+public class GuessRenderer : BaseRenderer<GuessData> {
     [SerializeField] private WordRenderer word;
 
-    public void UpdateGuess(AnnotatedWord guess, int maxLength)
-    {
-        word.UpdateWord(guess, maxLength );
+    protected override void Render(GuessData data) {
+        word.UpdateWord(data.Guess, data.MaxLength);
     }
 }
