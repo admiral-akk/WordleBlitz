@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PromptManager : MonoBehaviour, IUpdateObserver<GuessError> {
     [SerializeField] private PromptRenderer Renderer;
-
     public void Handle(GuessError update) {
         switch (update.Type) {
             case GuessError.ErrorType.None:

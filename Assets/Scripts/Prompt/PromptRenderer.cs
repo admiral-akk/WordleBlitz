@@ -3,15 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PromptRenderer : MonoBehaviour
-{
+public class PromptRenderer : MonoBehaviour {
     [SerializeField] private Image background;
     [SerializeField] private Image border;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField, Range(0.5f, 5)] private float Duration;
 
-    private enum State
-    {
+    private enum State {
         None,
         Hidden,
         InvalidWord,
@@ -20,8 +18,7 @@ public class PromptRenderer : MonoBehaviour
         NonBlitz,
     }
 
-    private void Awake()
-    {
+    private void Awake() {
         S = State.Hidden;
         text.text = "";
         background.enabled = false;
@@ -30,14 +27,11 @@ public class PromptRenderer : MonoBehaviour
     }
 
     private State _s;
-    private State S
-    {
+    private State S {
         get => _s;
-        set
-        {
+        set {
             _s = value;
-            switch (_s)
-            {
+            switch (_s) {
                 case State.None:
                 case State.Hidden:
                     return;
@@ -63,18 +57,15 @@ public class PromptRenderer : MonoBehaviour
         text,border,background
     };
 
-    private IEnumerator FadeoutCoroutine()
-    {
+    private IEnumerator FadeoutCoroutine() {
         Pop.AddAnimation(border.gameObject, new PopParameters(0.2f, 0.3f));
         Fadeout.AddAnimation(border.gameObject, new FadeoutParameters(Duration, Duration / 2, _graphics));
         yield return new WaitForSeconds(Duration);
         S = State.Hidden;
     }
 
-    public void HandleError(GuessResult.State s)
-    {
-        switch (s)
-        {
+    public void HandleError(GuessResult.State s) {
+        switch (s) {
             case GuessResult.State.InvalidWord:
                 S = State.InvalidWord;
                 break;
