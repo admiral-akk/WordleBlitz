@@ -2827,6 +2827,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Renderer: {fileID: 749173721}
+  InvalidWord: Word not in dictionary!
+  ReusedWord: Word used previously!
+  TooShort: Word has too few characters!
+  NonBlitz: Guess 'BLITZ' to start!
 --- !u!114 &672501829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3245,7 +3249,9 @@ MonoBehaviour:
   background: {fileID: 1341792526}
   border: {fileID: 1458112470}
   text: {fileID: 1125598}
-  Duration: 1.4
+  FadeDuration: 1.5
+  PopDuration: 0.2
+  PopMagnitude: 0.3
 --- !u!1 &901926931
 GameObject:
   m_ObjectHideFlags: 0

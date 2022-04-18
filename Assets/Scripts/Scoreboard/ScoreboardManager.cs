@@ -2,23 +2,8 @@ using System.Collections.Generic;
 
 
 public class ScoreboardData : BaseRenderData<ScoreboardData> {
-    public enum State {
-        None,
-    }
 
-    private State _state;
     private List<Word> _correct;
-
-    public State S {
-        get => _state;
-        set {
-            if (_state == value)
-                return;
-            _state = value;
-            HasUpdate = true;
-        }
-    }
-
     public Word this[int index] { get => _correct[index]; set {
             if (_correct[index] == value)
                 return;
@@ -29,7 +14,6 @@ public class ScoreboardData : BaseRenderData<ScoreboardData> {
     public int Count => _correct.Count;
 
     public ScoreboardData(int answerCount) : base() {
-        S = State.None;
         _correct = new List<Word>();
         for (var i = 0; i < answerCount; i++)
             _correct.Add("");
