@@ -1,36 +1,28 @@
-
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
-public class HistoryManager : MonoBehaviour, IUpdateObserver<GuessAnnotated> {
-    [SerializeField] private HistoryRenderer Renderer;
+public class HistoryData : BaseRenderData<HistoryData> {
+    public List<AnnotatedWord> Guesses { get; private set; }
 
-    private List<AnnotatedWord> _guesses;
-    private List<AnnotatedWord> Guesses => _guesses ??= new List<AnnotatedWord>();
-    public void GuessSubmitted(AnnotatedWord guess) {
+    public void AddGuess(AnnotatedWord guess) {
         Guesses.Add(guess);
-        Renderer.RenderGuess(guess);
+        HasUpdate = true;
     }
 
-    public void Awake() {
-        Guesses.Clear();
-        Renderer.Clear();
+    public HistoryData() : base() {
+        Guesses = new List<AnnotatedWord>();
     }
+}
 
-    public List<Word> GetCorrectGuesses() {
-        return _guesses
-            .Where(g => g.Knowledge.All(k => k == CharacterKnowledge.LetterKnowledge.Here) && g.Word != "BLITZ")
-            .Select(g => g.Word)
-            .ToList();
-    }
+public class HistoryManager : RendererManager<HistoryData>, IUpdateObserver<GuessAnnotated> {
+
+    private HistoryData _data;
+    protected override HistoryData Data => _data ??= new HistoryData();
 
     public List<AnnotatedWord> GetHistory() {
-        return new List<AnnotatedWord>(Guesses);
+        return new List<AnnotatedWord>(Data.Guesses);
     }
 
     public void Handle(GuessAnnotated update) {
-        Guesses.Add(update.AnnotatedGuess);
-        Renderer.RenderGuess(update.AnnotatedGuess);
+        Data.AddGuess(update.AnnotatedGuess);
     }
 }

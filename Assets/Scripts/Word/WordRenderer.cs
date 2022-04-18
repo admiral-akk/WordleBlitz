@@ -22,11 +22,13 @@ public class WordRenderer : MonoBehaviour
         _letters.Add(Instantiate(LetterPrefab, transform).GetComponent<LetterRenderer>());
     }
 
-    private Word _current;
+    public Word Current {
+        get; private set;
+    }
 
     private void Awake()
     {
-        _current = "";
+        Current = "";
     }
 
     public void UpdateWord(AnnotatedWord knowledge, int maxLength)
@@ -39,7 +41,7 @@ public class WordRenderer : MonoBehaviour
             if (i < word.Length)
             {
                 Letters[i].Set(word[i], knowledge.Knowledge[i]);
-                if (i >= _current.Length)
+                if (i >= Current.Length)
                     Letters[i].PopLetter();
             }
             else
@@ -47,6 +49,6 @@ public class WordRenderer : MonoBehaviour
                 Letters[i].Clear();
             }
         }
-        _current = knowledge.Word;
+        Current = knowledge.Word;
     } 
 }
