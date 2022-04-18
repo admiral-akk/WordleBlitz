@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class NewInputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour {
     private void OnGUI() {
         var e = Event.current;
         if (e == null)

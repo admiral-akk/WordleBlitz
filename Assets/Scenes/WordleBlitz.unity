@@ -2885,9 +2885,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ccd8c753eea22e478837c6227d5fc00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Renderer: {fileID: 1967593353}
+  RecentlyOpenDelay: 0.4
   Help: {fileID: 236024906}
-  Tutorial: {fileID: 1967593352}
-  RecentlyOpenDelay: 0.8
 --- !u!114 &672501833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7106,6 +7106,7 @@ GameObject:
   - component: {fileID: 1967593352}
   - component: {fileID: 1967593351}
   - component: {fileID: 1967593350}
+  - component: {fileID: 1967593353}
   m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
@@ -7195,6 +7196,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1967593353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967593348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48c07ed4b675f3c42a94b107cd724c29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2023503726
 GameObject:
   m_ObjectHideFlags: 0

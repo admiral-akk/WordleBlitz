@@ -41,7 +41,6 @@ public class TimerData : BaseRenderData<TimerData> {
 public class TimerManager : RendererManager<TimerData>,
     IUpdateObserver<GuessAnnotated>,
     IUpdateObserver<GameOver> {
-
     public float TimeSpent { get => _data.TimeSpent; set => _data.TimeSpent = value; }
 
     private TimerData _data;

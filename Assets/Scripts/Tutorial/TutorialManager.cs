@@ -2,90 +2,104 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialManager : MonoBehaviour
-{
-    [SerializeField] private Button Help;
-    [SerializeField] private Canvas Tutorial;
+public class TutorialData : BaseRenderData<TutorialData> {
+    public enum State {
+        Start,
+        Open,
+        Closed,
+    }
+
+    private State _state;
+
+    public State S {
+        get => _state;
+        set {
+            if (_state == value)
+                return;
+            _state = value;
+            HasUpdate = true;
+        }
+    }
+
+    public TutorialData() : base() {
+        S = State.Start;
+    }
+}
+
+
+public class TutorialManager : RendererManager<TutorialData>, 
+    IUpdateObserver<PlayerInput>,
+    IUpdateObserver<GuessAnnotated> {
+    private TutorialData _data;
+    protected override TutorialData Data {
+        get {
+            if (_data == null)
+                _data = new TutorialData();
+            return _data;
+        }
+    }
+
+    public void Handle(PlayerInput update) {
+        if (TutorialState == TutorialData.State.Start)
+            return;
+        CloseTutorial();
+    }
+    public void Handle(GuessAnnotated update) {
+        if (TutorialState != TutorialData.State.Start)
+            return;
+       CloseTutorial();
+    }
+    private enum State {
+        Start,
+        RecentlyChanged,
+        CanInteract,
+    }
+    private State _s;
+    private State S { get => _s; set {
+            _s = value;
+            if (_s == State.RecentlyChanged)
+                StartCoroutine(RecentlyChanged());
+        }
+    }
+
+    private TutorialData.State TutorialState {
+        get => Data.S;
+        set {
+            if (S == State.RecentlyChanged)
+                return;
+            S = State.RecentlyChanged;
+            Data.S = value;
+        }
+    }
     [SerializeField, Range(0,3)] private float RecentlyOpenDelay;
+    [SerializeField] private Button Help;
+
 
     private void Awake()
     {
         Help.onClick.AddListener(OpenTutorial);
-        OpenTutorial();
+        Data.S = TutorialData.State.Start;
+        S = State.Start;
     }
 
-    private void OpenTutorial()
-    {
-        StartCoroutine(SetOpen());
-    }
-
-    private IEnumerator SetOpen()
-    {
-        S = State.RecentlyOpen;
+    private IEnumerator RecentlyChanged() {
         yield return new WaitForSeconds(RecentlyOpenDelay);
-        S = State.Open;
+        S = State.CanInteract;
     }
 
-    private IEnumerator CloseTutorial()
-    {
-        S = State.RecentlyClosed;
-        yield return new WaitForSeconds(RecentlyOpenDelay);
-        S = State.Closed;
+    private void OpenTutorial() {
+        TutorialState = TutorialData.State.Open;
     }
-
-    private enum State
-    {
-        RecentlyOpen,
-        Open,
-        RecentlyClosed,
-        Closed,
+    private void CloseTutorial() {
+        TutorialState = TutorialData.State.Closed;
     }
-
-    private State _s;
-    private State S
-    {
-        get => _s;
-        set
-        {
-            switch (value)
-            {
-                case State.RecentlyOpen:
-                    if (_s != State.Closed)
-                        return;
-                    Tutorial.gameObject.SetActive(true);
-                    break;
-                case State.Open:
-                    if (_s != State.RecentlyOpen)
-                        return;
-                    Tutorial.gameObject.SetActive(true);
-                    break;
-                case State.RecentlyClosed:
-                    if (_s != State.Open)
-                        return;
-                    Tutorial.gameObject.SetActive(false);
-                    break;
-                case State.Closed:
-                    if (_s != State.RecentlyClosed)
-                        return;
-                    Tutorial.gameObject.SetActive(false);
-                    break;
-            }
-            _s = value;
-        }
-    }
-
-    private void OnGUI()
-    {
-        if (S != State.Open)
+    private void OnGUI() {
+        if (TutorialState != TutorialData.State.Open)
             return;
         var e = Event.current;
         if (e == null)
             return;
         if (e.isMouse && e.button == 0)
-            StartCoroutine(CloseTutorial());
-        if (e.type != EventType.KeyDown)
-            return;
-        if (e.keyCode == KeyCode.KeypadEnter || e.keyCode == KeyCode.Return)
-            StartCoroutine(CloseTutorial());
+            CloseTutorial();
     }
 }

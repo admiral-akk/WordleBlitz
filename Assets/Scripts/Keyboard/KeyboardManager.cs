@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static CommandKeyRenderer;
 
-public class InputManager : MonoBehaviour,
+public class KeyboardManager : MonoBehaviour,
     IUpdateObserver<KnowledgeInitialized>,
     IUpdateObserver<GuessAnnotated>,
     IUpdateObserver<NewAnswer> {
